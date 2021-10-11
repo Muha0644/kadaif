@@ -34,3 +34,4 @@
 #linux & vscode
 .directory
 .vscode/
+*.autosave
