@@ -1,7 +1,7 @@
 #include "parser.h"
 #include <QString>
 
-fileType parser(QString path){
+fileType parseType(QString path){
 	QString ext = path.last(4);
 	if(ext == ".gfx"){
 		return gfx;

@@ -15,12 +15,17 @@ find_package(QT NAMES Qt6 COMPONENTS Widgets Gui Core REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
-        main.cpp
+				main.cpp
         mainwindow.cpp
 				parser.cpp
 				parser.h
+				locstuff.h
+				locstuff.cpp
         mainwindow.h
         mainwindow.ui
+				loceditor.h
+				loceditor.cpp
+				loceditor.ui
 				sharedassets0.qrc
 )
 

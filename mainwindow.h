@@ -1,5 +1,6 @@
 #pragma once
 #include <QMainWindow>
+#include <QtWidgets>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class mainWindow; }
@@ -21,4 +22,5 @@ class mainWindow : public QMainWindow{
 
 	private:
 	Ui::mainWindow *ui;
+	QWidget *activeWidget = new QRadioButton;
 };

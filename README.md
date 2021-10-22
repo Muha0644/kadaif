@@ -15,7 +15,11 @@ Download a binary from the [releases tab](https://github.com/Muha0644/kadaif/rel
 Anyway here is how to compile from source if you want to:<br>
 * `git clone https://github.com/Muha0644/kadaif`
 * `cd kadaif`
+* `cmake .`
 * `make`
+
+Dependecies: `gcc cmake make qt6-base qt6-tools`<br>
+Yeah youre better off just downloading a premade binary...
 
 Of course if you use Arch Linux there is an AUR package: `kadaif-git` or `kadaif-bin` (not yet, this text is a placeholder)
 <br><br>
@@ -26,7 +30,7 @@ This section is an advertisement for a mod i'm working on. Check out **Waves of 
 Naturally, if you want Waves of the Danube to come out sooner. A larger team would be needed. If you have good GFX skills, writing skills or god bless us, have coding knowledge in HOI4 (or C++). Please join [our discord](https://discord.gg/kXsaS6jzsH)!<br><br>
 
 # License
-This code is licensed under GPL 3.0, that means you can do whatever you want with it, modify it, distibute it, you can even use it for commercial purpouses. The only thing you can't do is sublicense it, I.E. use a license other than GPL 3.0.
+This code is licensed under GPL 3.0, that means you can do whatever you want with it, modify it, distibute it, you can even use it for commercial purposes. The only thing you can't do is sublicense it, I.E. use a license other than GPL 3.0.
 
 You have to include a copy of the [GPL 3.0 license](https://github.com/Muha0644/kadaif/blob/master/LICENSE) in any code that derives from this code. You also _have_ to include install instructions and a list of all significant changes as well as a reference to the original code (basically just use git and you should be fine).
 
@@ -38,4 +42,5 @@ If you want to add a feature or fix a bug, just fork this repo, fix it, and subm
 
 * muha0644
 * monkebanana8
+* bog1sart
 * et. al.

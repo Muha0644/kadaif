@@ -62,7 +62,7 @@
       <property name="childrenCollapsible">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QTreeView" name="fileListThing">
@@ -124,14 +124,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QListWidget" name="listThing">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>150</height>
-        </size>
-       </property>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -157,7 +149,13 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+   </widget>
    <addaction name="menuKadaif"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -172,6 +170,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionOHNO">
+   <property name="text">
+    <string>OHNO</string>
    </property>
   </action>
  </widget>

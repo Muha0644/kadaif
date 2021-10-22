@@ -11,4 +11,4 @@ enum fileType{
 	event
 };
 
-fileType parser(QString path);
+fileType parseType(QString path);
