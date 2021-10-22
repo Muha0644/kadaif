@@ -5,14 +5,14 @@
 #include <QtWidgets>
 #include <QTextStream>
 
-class locstuff: public QObject{
+/*class locstuff: public QObject{
 	Q_OBJECT
 	public:
 	explicit locstuff(QObject *parent = nullptr);
 
 	signals:
 
-};
+};*/
 
 QMap<QString, QString>* parseLoc(QString &path);
 

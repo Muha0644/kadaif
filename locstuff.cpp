@@ -7,9 +7,11 @@
 #include <QMapIterator>
 #include <QRegularExpression>
 
-locstuff::locstuff(QObject *parent) : QObject(parent){
+/*locstuff::locstuff(QObject *parent) : QObject(parent){
 
-}
+}*/
+
+QString locSepetator = ":   ";
 
 QMap<QString, QString>* parseLoc(QString &path){
 	QFile file("."+path);
@@ -19,21 +21,29 @@ QMap<QString, QString>* parseLoc(QString &path){
 	}
 
 	QTextStream in(&file);
-	QMap<QString, QString> *locMap = new QMap<QString, QString>;			//This will cause a memory leak
+	QMap<QString, QString> *locMap = new QMap<QString, QString>;			//This might cause a memory leak
 	QString line;
+	int lineNum = 99999;		//6 digits should be enough. That means a max of ~900000 lines.
 
 	while(!in.atEnd()) {
+		lineNum++;
 		line = in.readLine();
-		if(line.trimmed().startsWith("#")){
-			locMap->insert(QString("#comment")+char(in.pos()), line);		//oh no...
+		if(line == "l_english:") continue;
+		if(line.trimmed().startsWith("#") || line.trimmed() == ""){
+			locMap->insert(QString::number(lineNum)+QString("#comment"), line);		//oh no...
 		} else{
 			auto stuff = line.trimmed().split(QRegularExpression(":\\d "));	//what if a different number is used? or there is more than one instance?
-			if(stuff.size() != 2){
-				qDebug() << "Parsing error at" << in.pos() << ". Make sure there is only one \":0\" on this line";
-				locMap->insert(QString("#comment")+char(in.pos()), line);
+			if(stuff.size() != 2){ //if it's 1, then it's either a comment or just blank space.
+				qDebug() << "Parsing error at line" << lineNum-100000 << ". Make sure there is only one \":0\" on this line";
+				locMap->insert(QString::number(lineNum)+QString("#error"), line);
 				continue;
 			}
-			locMap->insert(stuff[0], stuff[1]);
+			locMap->insert(QString::number(lineNum)+stuff[0], stuff[1]);
+		}
+
+		if(lineNum == 999999){			//only 6 numbers are used for each line. This prevents an overflow.
+			qDebug() << "Localization file is too big, truncated at line 999999"; //It would be better if QMap was not sorted
+			return locMap;
 		}
 	}
 	return locMap;
@@ -53,10 +63,10 @@ void unparseLoc(QString &path, QMap<QString, QString> &locMap){		//exporting to 
 	QMapIterator<QString, QString> i(locMap);
 	while(i.hasNext()){
 		i.next();
-		if(i.key().startsWith("#")){
+		if(i.key().sliced(6).startsWith("#")){
 			out << i.value() << Qt::endl;
 		} else{
-			out << " " << i.key() << ":0 " << i.value() << Qt::endl;
+			out << " " << i.key().sliced(6) << locSepetator << i.value() << Qt::endl;
 		}
 	};
 	out.flush();
@@ -67,10 +77,10 @@ void unparseLoc(QTextStream &out, QMap<QString, QString> &locMap){	//exporting t
 	QMapIterator<QString, QString> i(locMap);
 	while(i.hasNext()) {
 		i.next();
-		if(i.key().startsWith("#")){
+		if(i.key().sliced(6).startsWith("#")){
 			out << i.value() << Qt::endl;
 		} else{
-			out << " " << i.key() << ":0 " << i.value() << Qt::endl;
+			out << " " << i.key().sliced(6) << locSepetator << i.value() << Qt::endl;
 		}
 	}
 }
@@ -81,10 +91,10 @@ void setUpLoc(QListWidget *activeWidget, QString &path){
 	QMapIterator<QString, QString> i(*locMap);
 	while(i.hasNext()){
 		i.next();
-		if(i.key().startsWith("#")){
+		if(i.key().sliced(6).startsWith("#")){
 			activeWidget->addItem(i.value());
 		} else{
-			activeWidget->addItem(i.key() + i.value());
+			activeWidget->addItem(i.key().sliced(6) + locSepetator + i.value());
 		}
 	}
 }

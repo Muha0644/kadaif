@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>mainWindow</string>
+   <string>Kadaif</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
@@ -153,6 +153,7 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <addaction name="actionLocalization_editor"/>
    </widget>
    <addaction name="menuKadaif"/>
    <addaction name="menuTools"/>
@@ -172,9 +173,9 @@
     <enum>QAction::PreferencesRole</enum>
    </property>
   </action>
-  <action name="actionOHNO">
+  <action name="actionLocalization_editor">
    <property name="text">
-    <string>OHNO</string>
+    <string>Localization editor</string>
    </property>
   </action>
  </widget>
