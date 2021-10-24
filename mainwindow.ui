@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>844</width>
-    <height>621</height>
+    <width>820</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -133,7 +133,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>844</width>
+     <width>820</width>
      <height>22</height>
     </rect>
    </property>
@@ -141,7 +141,14 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menu_New">
+     <property name="title">
+      <string>&amp;New...</string>
+     </property>
+     <addaction name="actionLocalisation_file"/>
+    </widget>
     <addaction name="openFolder"/>
+    <addaction name="menu_New"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -167,15 +174,25 @@
   </action>
   <action name="openFolder">
    <property name="text">
-    <string>Open...</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::PreferencesRole</enum>
+    <string>&amp;Open...</string>
    </property>
   </action>
   <action name="actionLocalization_editor">
    <property name="text">
     <string>Localization editor</string>
+   </property>
+  </action>
+  <action name="action_New">
+   <property name="text">
+    <string>&amp;New...</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WidgetWithChildrenShortcut</enum>
+   </property>
+  </action>
+  <action name="actionLocalisation_file">
+   <property name="text">
+    <string>Localisation file</string>
    </property>
   </action>
  </widget>

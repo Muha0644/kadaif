@@ -4,6 +4,7 @@
 #include <QString>
 #include <QtWidgets>
 #include <QTextStream>
+#include <QHash>
 
 /*class locstuff: public QObject{
 	Q_OBJECT
@@ -14,8 +15,14 @@
 
 };*/
 
-QMap<QString, QString>* parseLoc(QString &path);
+struct locEntry{
+	QString file;
+	int line;
+	QString key;
+	QString value;
+};
 
-void unparseLoc(QString &path, QMap<QString, QString> &locMap);
-void unparseLoc(QTextStream &out, QMap<QString, QString> &locMap);
-void setUpLoc(QListWidget *activeWidget, QString &path);
+QList<QString>* parseLocFile(QString &path);
+void loadLocFile(QListWidget *activeWidget, QString &path);
+QHash<QString, locEntry>* loadLoc();
+void unparseLoc(QString &path, QList<QString> &locFileList);
