@@ -19,13 +19,15 @@ set(PROJECT_SOURCES
         mainwindow.cpp
 				parser.cpp
 				parser.h
-				locstuff.h
-				locstuff.cpp
         mainwindow.h
-        mainwindow.ui
-				loceditor.h
-				loceditor.cpp
-				loceditor.ui
+				mainwindow.ui
+				dataclass.h
+				dataclass.cpp
+				loc/locstuff.h
+				loc/locstuff.cpp
+				loc/loceditor.h
+				loc/loceditor.cpp
+				loc/loceditor.ui
 				sharedassets0.qrc
 )
 

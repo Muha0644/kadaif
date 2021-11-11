@@ -11,9 +11,9 @@
 }*/
 
 QList<QString>* parseLocFile(QString &path){
-	QFile file("."+path);
+	QFile file("." + path);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug() << "Failed to open file" << path;
+		qDebug() << "Failed to open file" << path << "for parsing.";
 		return nullptr;
 	}
 
@@ -39,6 +39,21 @@ void loadLocFile(QListWidget *activeWidget, QString &path){
 	delete fileLocList;
 }
 
+void saveLocFile(QList<QString> *list, QString& path){
+		QFile file("."+path);
+		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+			qDebug() << "Failed to open file" << path << "for writing.";
+			return;
+		}
+		QTextStream out(&file);
+		out.setEncoding(QStringConverter::Utf8);						//maybe unnecessarry?
+		out.setGenerateByteOrderMark(true);
+
+		foreach(QString line, *list){
+			out << line << Qt::endl;
+		}
+		out.flush();
+}
 
 QHash<QString, locEntry>* loadLoc(){
 	QHash<QString, locEntry>* locAll = new QHash<QString, locEntry>;
@@ -56,10 +71,11 @@ QHash<QString, locEntry>* loadLoc(){
 
 	QStringList files = locDir.entryList(QStringList() << "*.yml",QDir::Files);
 	foreach(QString filename, files){	//open each file and add entries to the hashmap
-		QFile file(filename);
+		QFile file(locDir.absoluteFilePath(filename));
 		if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-			qDebug() << "Failed to open file \"localisation/" << filename << "\".";
+			qDebug() << "Failed to open file localisation file" << filename << ":" <<file.errorString();
 			//return nullptr;
+			continue;
 		}
 		QTextStream in(&file);
 		QString line;
@@ -71,7 +87,7 @@ QHash<QString, locEntry>* loadLoc(){
 
 			auto stuff = line.trimmed().split(QRegularExpression(":\\d "));	//what if there is more than one instance?
 			if(stuff.size() != 2){ //if it's 1, then it's either a comment or just blank space.
-				qDebug() << "Loc parsing error in file" << filename << "at line" << lineNum << ". Make sure there is only one \":0\" on this line";
+				qDebug() << "Loc parsing error in file" << filename << "at line" << lineNum << ". Make sure there is only one ':0' on this line";
 				continue;
 			}
 			locEntry yeah;
@@ -85,26 +101,3 @@ QHash<QString, locEntry>* loadLoc(){
 	return locAll;
 }
 
-/*void unparseLoc(QString &path, QList<QString> &locFileList){
-	QFile file("."+path);
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-		qDebug() << "Failed to open file" << path;
-		return;
-	}
-	QTextStream out(&file);
-	out.setEncoding(QStringConverter::Utf8);						//maybe unnecessarry?
-	out.setGenerateByteOrderMark(true);
-
-	out << "l_english:" << Qt::endl;
-	QMapIterator<QString, QString> i(locFileList);
-	while(i.hasNext()){
-		i.next();
-		if(i.key().sliced(6).startsWith("#")){
-			out << i.value() << Qt::endl;
-		} else{
-			out << " " << i.key().sliced(6) << i.value() << Qt::endl;
-		}
-	};
-	out.flush();
-}
-*/

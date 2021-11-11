@@ -9,11 +9,12 @@
 #include <QLayout>
 #include <QSpacerItem>
 #include "parser.h"
-#include "locstuff.h"
-#include "loceditor.h"
+#include "loc/locstuff.h"
+#include "loc/loceditor.h"
 
 
-mainWindow::mainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::mainWindow){
+mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent), ui(new Ui::mainWindow){
+	this->liveDB = dataClass;
 	QSettings settings("muha0644","Kadaif");
 	restoreGeometry(settings.value("main/geometry").toByteArray());
 	restoreState(settings.value("main/windowState").toByteArray());
@@ -30,11 +31,14 @@ mainWindow::mainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::mainWin
 		ui->fileListThing->hideColumn(1);
 		ui->fileListThing->hideColumn(2);
 		ui->fileListThing->hideColumn(3);
+		QDir::setCurrent(path);
 
-		this->locAll = loadLoc();
+		if(!liveDB->locAll){		//should be the first and only time it's initialised
+			liveDB->locAll = loadLoc();
+		}
 	}
 	ui->splitter->restoreState(settings.value("splitterSizes").toByteArray());
-	QDir::setCurrent(path);
+
 }
 
 mainWindow::~mainWindow(){
@@ -42,24 +46,79 @@ mainWindow::~mainWindow(){
 	settings.setValue("main/geometry", saveGeometry());
 	settings.setValue("main/windowState", saveState());
 	delete folderModel;
-	delete locAll;	//i mean the program is closed once you reach here, so this is redundant
 	delete ui;
+}
+
+void mainWindow::on_actionLocalization_editor_triggered(){
+	locEditor *locw = new locEditor;
+	locw->setAttribute(Qt::WA_DeleteOnClose);
+	locw->setAttribute( Qt::WA_QuitOnClose, false );
+	locw->show();
+}
+
+void mainWindow::nonononoedit(){			//SHOULD HAVE USED AN OBJECT
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[4]);
+	int cRow = real->currentRow();
+	if(cRow < 0) return;
+	locEditor *locw = new locEditor(liveDB,real->item(cRow));
+	locw->setAttribute(Qt::WA_DeleteOnClose);
+	locw->setAttribute( Qt::WA_QuitOnClose, false );
+	locw->show();
+	locw->entry.file = cPath.mid(sizeof("localization/"));
+	connect(locw, &locEditor::saved, this, &mainWindow::openMainWidget);
+}
+
+void mainWindow::nonononodelete(){			//THIS SHOULD NOT BE IN `mainWindow`
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[4]);
+	QList<QString> *fileLocList = parseLocFile(cPath);
+
+	int cRow = real->currentRow();
+
+	if(cRow != -1){//bruh segfault
+		fileLocList->remove(cRow);
+		real->clear();
+		QString entry;
+		foreach(entry, *fileLocList){
+			real->addItem(entry);
+		}
+	}
+	real->setCurrentRow(cRow);
+	saveLocFile(fileLocList,cPath);
+	delete fileLocList;
+}
+
+void mainWindow::nononononew(){				//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[4]);
+	QList<QString> *fileLocList = parseLocFile(cPath);
+
+	fileLocList->insert(real->currentRow()+1, " ");
+	real->insertItem(real->currentRow()+1, " ");
+
+	saveLocFile(fileLocList,cPath);
+	delete fileLocList;
+	real->setCurrentRow(real->currentRow()+1);
+	nonononoedit();
 }
 
 QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should have used an object...
 	QListWidget *locListWidget = new QListWidget;
-
 	QWidget *holder = new QWidget;
 	QVBoxLayout *vLayout = new QVBoxLayout(holder);		//do kids get deleted? I think they do.
 	QHBoxLayout *buttonBar = new QHBoxLayout;
-	QPushButton *saveButt = new QPushButton("Save");	//can also pass an icon as an argument.
+	QPushButton *editButt = new QPushButton("Edit");	//can also pass an icon as an argument.
 	QPushButton *newButt = new QPushButton("New entry under selection");
 	QPushButton *deleteButt = new QPushButton("Delete selection");
 	QSpacerItem *spase = new QSpacerItem(10000,20,QSizePolicy::Preferred);
 
+	//implement functions for the buttons. I don't want to convert everything into an object, even though it would be better
+	connect(newButt, &QPushButton::clicked, this, &mainWindow::nononononew);
+	connect(deleteButt, &QPushButton::clicked, this, &mainWindow::nonononodelete);
+	connect(editButt, &QPushButton::clicked, this, &mainWindow::nonononoedit);
+	connect(locListWidget, &QListWidget::itemDoubleClicked, this, &mainWindow::nonononoedit);
+
 	buttonBar->addWidget(newButt);
 	buttonBar->addWidget(deleteButt);
-	buttonBar->addWidget(saveButt);
+	buttonBar->addWidget(editButt);
 	buttonBar->addSpacerItem(spase);
 
 	vLayout->addLayout(buttonBar);
@@ -70,13 +129,14 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	return holder;
 }
 
-void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){ //TODO: add enter trigger
-	QSettings settings("muha0644","Kadaif");
-	QString path = ((QFileSystemModel)ui->fileListThing->model()).filePath(index);
-	path.remove(settings.value("path").toString());
+void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){	//TODO: add enter trigger
+	QSettings settings("muha0644","Kadaif");								//^won't do
+	cPath = ((QFileSystemModel)ui->fileListThing->model()).filePath(index);
+	cPath.remove(settings.value("path").toString());
+	openMainWidget(cPath);
+}
 
-	//ui->listThing->addItem(path + " | Type: " + (char)((int)parseType(path)));			//just debug st*ff
-
+void mainWindow::openMainWidget(QString path){
 	if(parseType(path) == nothing){	//if nothing will be changed, do not do anything.
 		return;
 	}
@@ -84,12 +144,12 @@ void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){ //TOD
 	switch(parseType(path)){
 		case loc:{
 			activeWidget = setUpLocList(path);
-			//connect(temp,temp->itemDoubleClicked, ); //open loc editor when you click on an entry
 			break;}
 		case nothing:	//should never reach here
 		default:
 			return;
 	}
+	QSettings settings("muha0644","Kadaif");
 	ui->splitter->restoreState(settings.value("splitterSizes").toByteArray());
 }
 
@@ -110,7 +170,9 @@ void mainWindow::on_openFolder_triggered(){	//open mod folder in sidebar
 	ui->fileListThing->hideColumn(2);
 	ui->fileListThing->hideColumn(3);
 
-	this->locAll = loadLoc();
+	if(!liveDB->locAll){		//should be the first and only time it's initialised
+		liveDB->locAll = loadLoc();
+	}
 }
 
 
@@ -119,9 +181,4 @@ void mainWindow::on_splitter_splitterMoved(int pos, int index){
 	settings.setValue("splitterSizes", ui->splitter->saveState());
 }
 
-void mainWindow::on_actionLocalization_editor_triggered(){
-	locEditor *locw = new locEditor;
-	locw->setAttribute(Qt::WA_DeleteOnClose);
-	locw->show();
-}
 

@@ -2,7 +2,8 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <QLayout>
-#include "locstuff.h"
+#include "loc/locstuff.h"
+#include "dataclass.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class mainWindow; }
@@ -12,15 +13,22 @@ class mainWindow : public QMainWindow{
 	Q_OBJECT
 
 	public:
-	mainWindow(QWidget *parent = nullptr);
+	mainWindow(dataClass *dataClass,QWidget *parent = nullptr);
 	~mainWindow();
-	QHash<QString, locEntry>* locAll;
+
+	QString cPath;
+	dataClass* liveDB;
+
+	void nonononoedit();
+	void nonononodelete();
+	void nononononew();
 
 	private slots:
 	void on_openFolder_triggered();
 	void on_splitter_splitterMoved(int pos, int index);
 	void on_fileListThing_doubleClicked(const QModelIndex &index);
 	void on_actionLocalization_editor_triggered();
+	void openMainWidget(QString path);
 
 	private:
 	QFileSystemModel *folderModel;
