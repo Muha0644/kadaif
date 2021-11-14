@@ -11,15 +11,20 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
 <br><br>
 
 # Installation
-Download a binary from the [releases tab](https://github.com/Muha0644/kadaif/releases), or compile from source if you want the latest and greatest. If you use a Mac... I'm really sorry for you. Here, have a cookie 🍪<br>
-Anyway here is how to compile from source if you want to:<br>
+ Download a binary from the [releases tab](https://github.com/Muha0644/kadaif/releases), or compile from source if you want the latest and greatest. If you use a Mac... I'm really sorry for you. Here, have a cookie 🍪<br>
+ Anyway here is how to compile from source if you want to:<br>
+ ## Install Qt6 and dependencies
+  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. If you're like me, and don't wish to make an account to use open-source software, you can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it.<br>
+  To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). If you followed the guide correctly you should already have all the dependencies you need.
+ ## Install Kadaif
+  Now that you have everything you need, download and install kadaif:
 * `git clone https://github.com/Muha0644/kadaif`
 * `cd kadaif`
 * `cmake .`
-* `make`
+* `cmake --build .`
 
-Dependecies: `gcc cmake make qt6-base qt6-tools`<br>
-Yeah youre better off just downloading a premade binary...
+
+Yeah you're probabbly better off just downloading a premade binary...
 
 Of course if you use Arch Linux there is an AUR package: `kadaif-git` or `kadaif-bin` (not yet, this text is a placeholder)
 <br><br>
@@ -32,14 +37,14 @@ Naturally, if you want Waves of the Danube to come out sooner. A larger team wou
 # License
 This code is licensed under GPL 3.0, that means you can do whatever you want with it, modify it, distibute it, you can even use it for commercial purposes. The only thing you can't do is sublicense it, I.E. use a license other than GPL 3.0.
 
-You have to include a copy of the [GPL 3.0 license](https://github.com/Muha0644/kadaif/blob/master/LICENSE) in any code that derives from this code. You also _have_ to include install instructions and a list of all significant changes as well as a reference to the original code (basically just use git and you should be fine).
+You have to include a copy of the [GPL 3.0 license](https://github.com/Muha0644/kadaif/blob/master/LICENSE) in any code that derives from this code. You also _have_ to include install instructions and a list of all significant changes as well as a reference to the original code (basically just use git and you should be fine).<br><br>
 
 # Contributing
-If you want to add a feature or fix a bug, just fork this repo, fix it, and submit a pull request. Your name will be added in the credits.
+If you want to add a feature or fix a bug, just fork this repo, fix it, and submit a pull request. Your name will be added in the credits.<br>
+I recommed using QtCreator, because thats what I used, and also because it's just got everything you need. It's a great C++ IDE in general, and working with Qt is less painful using it.
 <br><br>
 
 # Credits
-
 * muha0644
 * monkebanana8
 * bog1sart
