@@ -81,6 +81,8 @@ void mainWindow::nonononodelete(){			//THIS SHOULD NOT BE IN `mainWindow`
 		foreach(entry, *fileLocList){
 			real->addItem(entry);
 		}
+	} else {
+		qDebug() << "cRow is -1";	//remove if never reached
 	}
 	real->setCurrentRow(cRow);
 	saveLocFile(fileLocList,cPath);
@@ -100,6 +102,29 @@ void mainWindow::nononononew(){				//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 	nonononoedit();
 }
 
+void mainWindow::nonononodup(){
+	QSettings settings("muha0644", "Kadaif");
+	QMessageBox msgBox;
+	msgBox.setText("Duplicate localization entries:");
+	msgBox.setInformativeText(settings.value("locDup").toString());
+	msgBox.exec();
+}
+
+void mainWindow::nonononoemty(){
+	QString empty;
+	QSettings settings("muha0644", "Kadaif");
+	foreach(auto entry, this->liveDB->locAll->values()){
+		if(entry.value.replace("\"", "").trimmed() == ""){
+			empty.append("Empty value found: " + entry.key + "\n" + entry.file + " on line: " + QString::number(entry.line) + "\n\n");
+		};
+	}
+	QMessageBox msgBox;
+	msgBox.setText("Empty localization keys:");
+	msgBox.setInformativeText(empty);
+	msgBox.exec();
+}
+
+
 QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should have used an object...
 	QListWidget *locListWidget = new QListWidget;
 	QWidget *holder = new QWidget;
@@ -110,12 +135,11 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	QPushButton *deleteButt = new QPushButton("Delete selection");
 	QSpacerItem *spase = new QSpacerItem(10000,20,QSizePolicy::Preferred);
 
-	//implement functions for the buttons. I don't want to convert everything into an object, even though it would be better
+	//I don't want to convert everything into an object, even though it would be better
 	connect(newButt, &QPushButton::clicked, this, &mainWindow::nononononew);
 	connect(deleteButt, &QPushButton::clicked, this, &mainWindow::nonononodelete);
 	connect(editButt, &QPushButton::clicked, this, &mainWindow::nonononoedit);
 	connect(locListWidget, &QListWidget::itemDoubleClicked, this, &mainWindow::nonononoedit);
-
 	buttonBar->addWidget(newButt);
 	buttonBar->addWidget(deleteButt);
 	buttonBar->addWidget(editButt);
@@ -123,9 +147,9 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 
 	vLayout->addLayout(buttonBar);
 	vLayout->addWidget(locListWidget);
-
 	ui->splitter->addWidget(holder);
 	loadLocFile(locListWidget, path);	//do not question why this is here
+
 	return holder;
 }
 
@@ -140,10 +164,27 @@ void mainWindow::openMainWidget(QString path){
 	if(parseType(path) == nothing){	//if nothing will be changed, do not do anything.
 		return;
 	}
-	if(activeWidget){ delete activeWidget; activeWidget = nullptr;}	//something will be changed, delete the old
+	if(activeWidget){ //something will be changed, delete the old
+		delete activeWidget;
+		activeWidget = nullptr;
+		for(auto child: ui->extraButt->children()){
+			delete child;
+		};
+	}
 	switch(parseType(path)){
 		case loc:{
 			activeWidget = setUpLocList(path);
+
+			QGridLayout *container = new QGridLayout(ui->extraButt);
+			QPushButton *checkDup = new QPushButton("Show duplicates");
+			QPushButton *findEmty = new QPushButton("Find empty keys");
+			connect(findEmty, &QPushButton::clicked, this, &mainWindow::nonononoemty);
+			connect(checkDup, &QPushButton::clicked, this, &mainWindow::nonononodup);
+			container->addWidget(checkDup,0,0);
+			container->addWidget(findEmty,0,1);
+			break;}
+		case gfx:{
+
 			break;}
 		case nothing:	//should never reach here
 		default:

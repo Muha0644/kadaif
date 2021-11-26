@@ -3,6 +3,9 @@
 #include <QString>
 #include <loc/locstuff.h>
 #include <QObject>
+#include <QList>
+#include <stdio.h>
+#include <stdlib.h>
 
 class dataClass: public QObject{
 	Q_OBJECT
@@ -17,3 +20,4 @@ signals:
 
 };
 
+void messHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);

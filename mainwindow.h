@@ -22,6 +22,8 @@ class mainWindow : public QMainWindow{
 	void nonononoedit();
 	void nonononodelete();
 	void nononononew();
+	void nonononodup();
+	void nonononoemty();
 
 	private slots:
 	void on_openFolder_triggered();

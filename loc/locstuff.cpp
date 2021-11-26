@@ -13,7 +13,7 @@
 QList<QString>* parseLocFile(QString &path){
 	QFile file("." + path);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug() << "Failed to open file" << path << "for parsing.";
+		qCritical() << "Failed to open file" << path << "for parsing.";
 		return nullptr;
 	}
 
@@ -42,7 +42,7 @@ void loadLocFile(QListWidget *activeWidget, QString &path){
 void saveLocFile(QList<QString> *list, QString& path){
 		QFile file("."+path);
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-			qDebug() << "Failed to open file" << path << "for writing.";
+			qCritical() << "Failed to open file" << path << "for writing.";
 			return;
 		}
 		QTextStream out(&file);
@@ -57,14 +57,16 @@ void saveLocFile(QList<QString> *list, QString& path){
 
 QHash<QString, locEntry>* loadLoc(){
 	QHash<QString, locEntry>* locAll = new QHash<QString, locEntry>;
+	QSettings settings("muha0644","Kadaif");
+	settings.setValue("locDup", "");
 
 	QDir locDir(".");
 	if(!locDir.cd("localisation")){		//what if it doesn't exist?
 		if(!locDir.mkdir("localisation")){
-			qDebug() << "Failed to make \"localisation\" folder. Make sure you have write access to the mod folder.";
+			qCritical() << "Failed to create \"localisation\" folder. Something is seriously wrong.";
 			//should abort now soooo
 			delete locAll; //don't want to cause a memory leak...
-			return nullptr;
+			return nullptr; //maybe it's better to just return an empty QHash?
 		}
 		locDir.cd("localisation");
 	}
@@ -73,7 +75,7 @@ QHash<QString, locEntry>* loadLoc(){
 	foreach(QString filename, files){	//open each file and add entries to the hashmap
 		QFile file(locDir.absoluteFilePath(filename));
 		if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-			qDebug() << "Failed to open file localisation file" << filename << ":" <<file.errorString();
+			qCritical() << "Failed to open file localisation file" << filename << ":" <<file.errorString();
 			//return nullptr;
 			continue;
 		}
@@ -87,14 +89,20 @@ QHash<QString, locEntry>* loadLoc(){
 
 			auto stuff = line.trimmed().split(QRegularExpression(":\\d "));	//what if there is more than one instance?
 			if(stuff.size() != 2){ //if it's 1, then it's either a comment or just blank space.
-				qDebug() << "Loc parsing error in file" << filename << "at line" << lineNum << ". Make sure there is only one ':0' on this line";
+				qInfo() << "Loc parsing error in file" << filename << "at line" << lineNum << ". Make sure there is only one ':0' on this line";
 				continue;
 			}
 			locEntry yeah;
 			yeah.file = filename;
 			yeah.line = lineNum;
-			yeah.key = stuff[0];			//is it really necessarry?
+			yeah.key = stuff[0];
 			yeah.value = stuff [1];
+			if(locAll->contains(stuff[0])){
+				QString mesg("Duplicate key found: " + stuff[0] + "\n" + yeah.file + " on line: " + QString::number(yeah.line) + "\n"
+						+ locAll->value(stuff[0]).file + " on line: "  + QString::number(locAll->value(stuff[0]).line));
+				qWarning() << mesg;
+				settings.setValue("locDup", settings.value("locDup").toString() + mesg + "\n\n");
+			}
 			locAll->insert(stuff[0], yeah);
 		}
 	}

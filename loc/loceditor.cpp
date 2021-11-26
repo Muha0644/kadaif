@@ -69,7 +69,7 @@ locEditor::locEditor(dataClass *liveDB,QListWidgetItem *item, QWidget *parent): 
 
 			return;
 		}
-		qDebug() << "Error parsing loc item:" << item->text() << ". Make sure there is only one ':0' on this line";
+		qInfo() << "Error parsing loc item:" << item->text() << ". Make sure there is only one ':0' on this line";
 		return; //maybe an error popup?
 	} else{			//an actual entry has been found
 		entry = liveDB->locAll->value(stuff[0]);

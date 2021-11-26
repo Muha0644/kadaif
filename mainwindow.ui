@@ -105,20 +105,9 @@
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="DXT5ifyButton">
-            <property name="text">
-             <string>DXT5-ify</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="text">
-             <string>doStuff</string>
-            </property>
-           </widget>
+         <layout class="QGridLayout" name="belowButtLayout">
+          <item row="0" column="0" alignment="Qt::AlignVCenter">
+           <widget class="QWidget" name="extraButt" native="true"/>
           </item>
          </layout>
         </item>

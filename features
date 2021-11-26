@@ -1,0 +1,10 @@
+LOC:
+    -view all entries as a QHash
+    -view by file
+    -edit entries in a file
+    -add and delete entries
+    -find duplicate entries
+    -find empty keys
+
+
+NOT IMPLEMENTED:
