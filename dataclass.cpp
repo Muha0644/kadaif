@@ -19,12 +19,11 @@ void messHandler(QtMsgType type, const QMessageLogContext &context, const QStrin
 			break;
 
 		case QtInfoMsg:		//Something that does not directly cause issues: parsing errors,
-			fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+			//fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 			break;
 
 		case QtWarningMsg:{	//Something that the user should be warned about: duplicate loc entry,
-			fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-
+			//fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 			break;}
 
 		case QtCriticalMsg:{	//A big problem, with an error popup: file can't be opened,
@@ -40,4 +39,6 @@ void messHandler(QtMsgType type, const QMessageLogContext &context, const QStrin
 			fprintf(stderr, "[ Fatal ]: (%s:%u, %s)\n %s\n", file, context.line, function, localMsg.constData());
 			break;
 	}
+
+	fflush(stdout);
 }

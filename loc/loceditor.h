@@ -12,7 +12,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui {class locEditor;}
 QT_END_NAMESPACE
 
-class locHighlighter: public QSyntaxHighlighter{
+/*class locHighlighter: public QSyntaxHighlighter{
 	Q_OBJECT
 
 	public:
@@ -39,7 +39,7 @@ class locHighlighter: public QSyntaxHighlighter{
 	QTextCharFormat multiLineCommentFormat;
 	QTextCharFormat quotationFormat;
 	QTextCharFormat functionFormat;
-};
+};*/
 
 class locEditor : public QWidget{
 	Q_OBJECT
@@ -54,9 +54,7 @@ class locEditor : public QWidget{
 
 	private slots:
 	void on_textEdit_textChanged();
-
 	void on_saveButton_clicked();
-
 	void on_copyButton_clicked();
 
 	signals:
@@ -64,7 +62,7 @@ class locEditor : public QWidget{
 
 	private:
 	Ui::locEditor *ui;
-	locHighlighter *locHigh;
+	//locHighlighter *locHigh;
 };
 
 

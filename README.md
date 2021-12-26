@@ -13,9 +13,15 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
 # Installation
  Download a binary from the [releases tab](https://github.com/Muha0644/kadaif/releases), or compile from source if you want the latest and greatest. If you use a Mac... I'm really sorry for you. Here, have a cookie 🍪<br>
  Anyway here is how to compile from source if you want to:<br>
- ## Install Qt6 and dependencies
-  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. If you're like me, and don't wish to make an account to use open-source software, you can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it.<br>
-  To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). If you followed the guide correctly you should already have all the dependencies you need.
+ ### <em>Windows</em>
+  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account.
+### <em>Linux</em>
+ Arch: `sudo pacman -Syu qt6-base qt6-doc qt6-tools qt6-translations`<br>
+ Debian: [idk, you can make a PR to add the command]<br>
+ RedHat: [same]<br>
+
+### <em>Compile Qt from source</em>
+ You can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it if you don't want to make an account you will never need. To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). If you followed the guide correctly you should already have all the dependencies you need.
  ## Install Kadaif
   Now that you have everything you need, download and install kadaif:
 * `git clone https://github.com/Muha0644/kadaif`
