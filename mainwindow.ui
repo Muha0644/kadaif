@@ -21,13 +21,16 @@
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="bottomMargin">
+     <number>5</number>
+    </property>
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -50,6 +53,9 @@
         <height>0</height>
        </size>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -64,13 +70,43 @@
       </property>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="newButt">
+            <property name="text">
+             <string>New...</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="rmButt">
+            <property name="text">
+             <string>Delete/Rename</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item>
          <widget class="QTreeView" name="fileListThing">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>5</height>
+           </size>
           </property>
           <property name="baseSize">
            <size>
@@ -79,7 +115,7 @@
            </size>
           </property>
           <property name="frameShape">
-           <enum>QFrame::Panel</enum>
+           <enum>QFrame::StyledPanel</enum>
           </property>
           <property name="editTriggers">
            <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
@@ -105,11 +141,20 @@
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="belowButtLayout">
-          <item row="0" column="0" alignment="Qt::AlignVCenter">
-           <widget class="QWidget" name="extraButt" native="true"/>
-          </item>
-         </layout>
+         <widget class="QFrame" name="extraButt">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

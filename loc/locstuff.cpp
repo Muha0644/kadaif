@@ -11,7 +11,7 @@
 }*/
 
 QList<QString>* parseLocFile(QString &path){
-	QFile file("." + path);
+	QFile file(path);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 		qCritical() << "Failed to open file" << path << "for parsing.";
 		return nullptr;
@@ -40,7 +40,7 @@ void loadLocFile(QListWidget *activeWidget, QString &path){
 }
 
 void saveLocFile(QList<QString> *list, QString& path){
-		QFile file("."+path);
+		QFile file(path);
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
 			qCritical() << "Failed to open file" << path << "for writing.";
 			return;
@@ -60,7 +60,7 @@ QHash<QString, locEntry>* loadLoc(){
 	QSettings settings("muha0644","Kadaif");
 	settings.setValue("locDup", "");
 
-	QDir locDir(".");
+	QDir locDir(".");												//!!!!!!!!!
 	if(!locDir.cd("localisation")){		//what if it doesn't exist?
 		if(!locDir.mkdir("localisation")){
 			qCritical() << "Failed to create \"localisation\" folder. Something is seriously wrong.";

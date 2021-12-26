@@ -3,10 +3,10 @@
 #include "ui_loceditor.h"
 #include <QListWidget>
 
-//STILL NO WAY TO EDIT KEYS!
+//STILL NO WAY TO EDIT KEYS! --done
 //or a preview, which was my goal...
 
-locHighlighter::locHighlighter(QTextDocument* parent):QSyntaxHighlighter(parent){
+/*locHighlighter::locHighlighter(QTextDocument* parent):QSyntaxHighlighter(parent){
 	this->isTool = 0;
 	HighlightingRule rule;
 }
@@ -19,7 +19,7 @@ locHighlighter::locHighlighter():QSyntaxHighlighter(new QTextDocument){	//sussy
 
 void locHighlighter::highlightBlock(const QString& text){
 
-}
+}*/
 
 void locEditor::on_textEdit_textChanged(){
 	if(windowTitle().startsWith("*")) return;
@@ -38,7 +38,7 @@ locEditor::locEditor(QWidget *parent): QWidget(parent),	ui(new Ui::locEditor){		
 
 	ui->textEdit->setFont(font);
 
-	locHigh = new locHighlighter(ui->textEdit->document());
+	//locHigh = new locHighlighter(ui->textEdit->document());
 	delete ui->saveButton;
 
 	//ui->textEdit->setPlainText();
@@ -57,7 +57,7 @@ locEditor::locEditor(dataClass *liveDB,QListWidgetItem *item, QWidget *parent): 
 
 	ui->textEdit->setFont(font);
 
-	locHigh = new locHighlighter(ui->textEdit->document());
+	//locHigh = new locHighlighter(ui->textEdit->document());	//don't have one yet
 
 	entry.line = item->listWidget()->currentRow()+1;
 	QString itemline = item->text();
@@ -96,7 +96,7 @@ void locEditor::on_saveButton_clicked(){
 	if(entry.file == ""){
 		return; //it should be copied to clipboard, but not now.
 	}
-	QString path = "/localisation/" + entry.file;
+	QString path = "localisation/" + entry.file;
 	QList<QString> *loceList = parseLocFile(path);
 	if(entry.key == ""){
 		loceList->replace(entry.line-1, entry.value);

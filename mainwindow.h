@@ -31,6 +31,9 @@ class mainWindow : public QMainWindow{
 	void on_fileListThing_doubleClicked(const QModelIndex &index);
 	void on_actionLocalization_editor_triggered();
 	void openMainWidget(QString path);
+	void on_newButt_clicked();
+	void on_rmButt_clicked();
+	void on_fileListThing_clicked(const QModelIndex &index);
 
 	private:
 	QFileSystemModel *folderModel;

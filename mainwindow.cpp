@@ -20,7 +20,7 @@ mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent
 	restoreState(settings.value("main/windowState").toByteArray());
 	ui->setupUi(this);
 
-	QString path = settings.value("path").toString();
+	QString path = settings.value("absPath").toString();
 	if(path == ""){	// if path is not saved make the user chose one.
 		ui->openFolder->trigger();
 	} else {
@@ -39,6 +39,10 @@ mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent
 	}
 	ui->splitter->restoreState(settings.value("splitterSizes").toByteArray());
 
+#ifdef COOLBUTTONBAR
+	ui->extraButt->setFrameShape(QFrame::Panel);
+	ui->extraButt->setFrameShadow(QFrame::Raised); //optimised for dark theme on linux
+#endif
 }
 
 mainWindow::~mainWindow(){
@@ -57,19 +61,19 @@ void mainWindow::on_actionLocalization_editor_triggered(){
 }
 
 void mainWindow::nonononoedit(){			//SHOULD HAVE USED AN OBJECT
-	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[4]);
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);
 	int cRow = real->currentRow();
 	if(cRow < 0) return;
 	locEditor *locw = new locEditor(liveDB,real->item(cRow));
 	locw->setAttribute(Qt::WA_DeleteOnClose);
 	locw->setAttribute( Qt::WA_QuitOnClose, false );
 	locw->show();
-	locw->entry.file = cPath.mid(sizeof("localization/"));
+	locw->entry.file = cPath.sliced(sizeof("localization"));
 	connect(locw, &locEditor::saved, this, &mainWindow::openMainWidget);
 }
 
 void mainWindow::nonononodelete(){			//THIS SHOULD NOT BE IN `mainWindow`
-	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[4]);
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);
 	QList<QString> *fileLocList = parseLocFile(cPath);
 
 	int cRow = real->currentRow();
@@ -82,21 +86,21 @@ void mainWindow::nonononodelete(){			//THIS SHOULD NOT BE IN `mainWindow`
 			real->addItem(entry);
 		}
 	} else {
-		qDebug() << "cRow is -1";	//remove if never reached
+		qDebug() << "!!!!!!!!!!!!!!!!!!!cRow is -1!!!!!!!!!!!!!!!!!!!!!!";	//remove if never reached
 	}
 	real->setCurrentRow(cRow);
-	saveLocFile(fileLocList,cPath);
+	saveLocFile(fileLocList, cPath);
 	delete fileLocList;
 }
 
 void mainWindow::nononononew(){				//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[4]);
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);
 	QList<QString> *fileLocList = parseLocFile(cPath);
 
 	fileLocList->insert(real->currentRow()+1, " ");
 	real->insertItem(real->currentRow()+1, " ");
 
-	saveLocFile(fileLocList,cPath);
+	saveLocFile(fileLocList, cPath);
 	delete fileLocList;
 	real->setCurrentRow(real->currentRow()+1);
 	nonononoedit();
@@ -112,7 +116,7 @@ void mainWindow::nonononodup(){
 
 void mainWindow::nonononoemty(){
 	QString empty;
-	QSettings settings("muha0644", "Kadaif");
+	///QSettings settings("muha0644", "Kadaif");
 	foreach(auto entry, this->liveDB->locAll->values()){
 		if(entry.value.replace("\"", "").trimmed() == ""){
 			empty.append("Empty value found: " + entry.key + "\n" + entry.file + " on line: " + QString::number(entry.line) + "\n\n");
@@ -124,7 +128,6 @@ void mainWindow::nonononoemty(){
 	msgBox.exec();
 }
 
-
 QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should have used an object...
 	QListWidget *locListWidget = new QListWidget;
 	QWidget *holder = new QWidget;
@@ -134,12 +137,23 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	QPushButton *newButt = new QPushButton("New entry under selection");
 	QPushButton *deleteButt = new QPushButton("Delete selection");
 	QSpacerItem *spase = new QSpacerItem(10000,20,QSizePolicy::Preferred);
+#ifndef NOTITLE
+	vLayout->setContentsMargins(5, 2, 0, 0);
+	QLabel *title = new QLabel(path);
+	QFont font;
+	font.setBold(true);
+	font.setPointSize(12);
+	title->setFont(font);
+	vLayout->addWidget(title);
+#endif
 
 	//I don't want to convert everything into an object, even though it would be better
 	connect(newButt, &QPushButton::clicked, this, &mainWindow::nononononew);
 	connect(deleteButt, &QPushButton::clicked, this, &mainWindow::nonononodelete);
 	connect(editButt, &QPushButton::clicked, this, &mainWindow::nonononoedit);
 	connect(locListWidget, &QListWidget::itemDoubleClicked, this, &mainWindow::nonononoedit);
+
+
 	buttonBar->addWidget(newButt);
 	buttonBar->addWidget(deleteButt);
 	buttonBar->addWidget(editButt);
@@ -149,14 +163,17 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	vLayout->addWidget(locListWidget);
 	ui->splitter->addWidget(holder);
 	loadLocFile(locListWidget, path);	//do not question why this is here
-
+	//amazingly documented code, i know. No need to thank me
 	return holder;
 }
 
-void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){	//TODO: add enter trigger
-	QSettings settings("muha0644","Kadaif");								//^won't do
+void mainWindow::on_fileListThing_clicked(const QModelIndex &index){
+	QSettings settings("muha0644","Kadaif");
 	cPath = ((QFileSystemModel)ui->fileListThing->model()).filePath(index);
-	cPath.remove(settings.value("path").toString());
+	cPath.remove(settings.value("absPath").toString()).remove(0,1);
+}
+
+void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){
 	openMainWidget(cPath);
 }
 
@@ -170,11 +187,14 @@ void mainWindow::openMainWidget(QString path){
 		for(auto child: ui->extraButt->children()){
 			delete child;
 		};
+		ui->extraButt->setBaseSize(0,0);		//ignoring this for now, will probbably be problematic later...
+		ui->extraButt->resize(0,0);
+		ui->fileListThing->updateGeometry();
 	}
+
 	switch(parseType(path)){
 		case loc:{
 			activeWidget = setUpLocList(path);
-
 			QGridLayout *container = new QGridLayout(ui->extraButt);
 			QPushButton *checkDup = new QPushButton("Show duplicates");
 			QPushButton *findEmty = new QPushButton("Find empty keys");
@@ -200,7 +220,7 @@ void mainWindow::on_openFolder_triggered(){	//open mod folder in sidebar
 	path.chop(sizeof("descriptor.mod"));
 
 	QSettings settings("muha0644", "Kadaif");
-	settings.setValue("path", path);
+	settings.setValue("absPath", path);
 	QDir::setCurrent(path);
 
 	QPointer<QFileSystemModel> model = new QFileSystemModel;
@@ -220,6 +240,31 @@ void mainWindow::on_openFolder_triggered(){	//open mod folder in sidebar
 void mainWindow::on_splitter_splitterMoved(int pos, int index){
 	QSettings settings("muha0644", "Kadaif");
 	settings.setValue("splitterSizes", ui->splitter->saveState());
+}
+
+
+
+void mainWindow::on_newButt_clicked(){
+	QDir root;
+	QFileInfo finfo(cPath);
+	QList<QString> pathList = QDir::cleanPath(this->cPath).split("/");
+	QString newpath;
+	if(finfo.isDir()){
+			newpath = cPath;
+	} else newpath = root.filePath(cPath);
+
+
+	if(root.exists(/*final name from dialog*/)){
+		//the fuck you trynna do?
+	}
+
+	//root.mkdir("what");
+}
+
+
+void mainWindow::on_rmButt_clicked(){
+	QDir root;
+	root.remove(cPath);
 }
 
 
