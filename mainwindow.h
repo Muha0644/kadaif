@@ -34,6 +34,7 @@ class mainWindow : public QMainWindow{
 	void on_newButt_clicked();
 	void on_rmButt_clicked();
 	void on_fileListThing_clicked(const QModelIndex &index);
+	void on_renameButt_clicked();
 
 	private:
 	QFileSystemModel *folderModel;

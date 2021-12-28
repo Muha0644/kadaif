@@ -61,7 +61,7 @@ void mainWindow::on_actionLocalization_editor_triggered(){
 }
 
 void mainWindow::nonononoedit(){			//SHOULD HAVE USED AN OBJECT
-	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);	//!!! this will bug out if NOTITLE is defined
 	int cRow = real->currentRow();
 	if(cRow < 0) return;
 	locEditor *locw = new locEditor(liveDB,real->item(cRow));
@@ -177,6 +177,8 @@ void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){
 	openMainWidget(cPath);
 }
 
+//!!!! on_selection_changed will cause issues. navigating with a keyboard does not work
+
 void mainWindow::openMainWidget(QString path){
 	if(parseType(path) == nothing){	//if nothing will be changed, do not do anything.
 		return;
@@ -223,10 +225,11 @@ void mainWindow::on_openFolder_triggered(){	//open mod folder in sidebar
 	settings.setValue("absPath", path);
 	QDir::setCurrent(path);
 
-	QPointer<QFileSystemModel> model = new QFileSystemModel;
-	model->setRootPath(path);
-	ui->fileListThing->setModel(model);
-	ui->fileListThing->setRootIndex(model->index(path));
+	if(this->folderModel) delete this->folderModel;
+	folderModel = new QFileSystemModel;
+	folderModel->setRootPath(path);
+	ui->fileListThing->setModel(folderModel);
+	ui->fileListThing->setRootIndex(folderModel->index(path));
 	ui->fileListThing->hideColumn(1);
 	ui->fileListThing->hideColumn(2);
 	ui->fileListThing->hideColumn(3);
@@ -243,28 +246,72 @@ void mainWindow::on_splitter_splitterMoved(int pos, int index){
 }
 
 
-
 void mainWindow::on_newButt_clicked(){
 	QDir root;
 	QFileInfo finfo(cPath);
-	QList<QString> pathList = QDir::cleanPath(this->cPath).split("/");
-	QString newpath;
-	if(finfo.isDir()){
-			newpath = cPath;
-	} else newpath = root.filePath(cPath);
+	QString newpath;	//relative path, always ends with a /
+	if(finfo.isFile()){
+			newpath = root.filePath(cPath);
+			newpath.remove(finfo.fileName());
+	} else newpath = cPath+"/";
+	if(newpath == "/") newpath = "./";
 
-
-	if(root.exists(/*final name from dialog*/)){
-		//the fuck you trynna do?
+	bool ok;
+	QString text = QInputDialog::getText(this,"" , "Choose a name for the file.\n If you want to make a new folder, put a \"/\" after the name.",
+										 QLineEdit::Normal,"" , &ok);
+	if(!ok || text.isEmpty()) return;
+	if(root.exists(newpath+text)){
+		qCritical() << "File '" + newpath+text + "' already exists.";
+		return;
 	}
 
-	//root.mkdir("what");
+	if(text.endsWith("/")){	//directory
+		if(!root.mkpath(newpath+text)) qCritical() << "Could not create folder '" + newpath+text + "'. Does it already exist?";
+		return;
+	}
+	QFile shittyImplementation(newpath+text);//file		//!!!! deletes all file contents...v maybe fixes it?
+	if(!shittyImplementation.open(QIODevice::WriteOnly | QIODevice::Text) || shittyImplementation.exists()){
+		qCritical() << "Could not create file '" + newpath+text + "'.";
+		return;
+	}
+	shittyImplementation.close();
 }
 
+void mainWindow::on_renameButt_clicked(){
+	QDir root;
+	QFileInfo finfo(cPath);
+	QString newpath;	//recycled code, yeah
+	if(finfo.isFile()){
+			newpath = root.filePath(cPath);
+			newpath.remove(finfo.fileName());
+	} else newpath = cPath+"/";
+	if(newpath == "/") newpath = "./";
+
+	bool ok;
+	QString text = QInputDialog::getText(this,"" , "New name:", QLineEdit::Normal, finfo.fileName(), &ok);
+	if(!ok || text.isEmpty()) return;
+	if(root.exists(newpath+text)){
+		qCritical() << "File '" + newpath+text + "' already exists.";
+		return;
+	}
+
+	QFile::rename(cPath, newpath+text);
+}
 
 void mainWindow::on_rmButt_clicked(){
-	QDir root;
-	root.remove(cPath);
+	//maybe ask for a confirmation?
+	//also warn user about the inevitable segfualt if they are dumb
+	if(cPath==""){
+		qCritical() << "Bruh, how about you select something first?";
+		return;
+	}
+	QModelIndex index = this->folderModel->index(cPath);
+	if(!this->folderModel->remove(index)){
+		//deleted the file, if flase that means it's likely a folder
+		if(!this->folderModel->rmdir(index)){
+			qCritical() << "Could not delete " + cPath + ". Something is seriously wrong. You should panic.";
+		}
+	}
+	cPath = "";
 }
-
 
