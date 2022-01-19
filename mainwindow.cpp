@@ -175,23 +175,29 @@ void mainWindow::on_fileListThing_clicked(const QModelIndex &index){
 
 void mainWindow::on_fileListThing_doubleClicked(const QModelIndex &index){
 	openMainWidget(cPath);
+	wPath = cPath;
 }
 
 //!!!! on_selection_changed will cause issues. navigating with a keyboard does not work
+
+void mainWindow::deleteActiveWidget(){
+	delete activeWidget;
+	activeWidget = nullptr;
+	for(auto child: ui->extraButt->children()){
+		delete child;
+	};
+	ui->extraButt->setBaseSize(0,0);		//ignoring this for now, will probbably be problematic later...
+	ui->extraButt->resize(0,0);
+	ui->fileListThing->updateGeometry();
+	return;
+}
 
 void mainWindow::openMainWidget(QString path){
 	if(parseType(path) == nothing){	//if nothing will be changed, do not do anything.
 		return;
 	}
 	if(activeWidget){ //something will be changed, delete the old
-		delete activeWidget;
-		activeWidget = nullptr;
-		for(auto child: ui->extraButt->children()){
-			delete child;
-		};
-		ui->extraButt->setBaseSize(0,0);		//ignoring this for now, will probbably be problematic later...
-		ui->extraButt->resize(0,0);
-		ui->fileListThing->updateGeometry();
+		deleteActiveWidget();
 	}
 
 	switch(parseType(path)){
@@ -249,7 +255,7 @@ void mainWindow::on_splitter_splitterMoved(int pos, int index){
 void mainWindow::on_newButt_clicked(){
 	QDir root;
 	QFileInfo finfo(cPath);
-	QString newpath;	//relative path, always ends with a /
+	QString newpath;	//relative path, folder always ends with a /
 	if(finfo.isFile()){
 			newpath = root.filePath(cPath);
 			newpath.remove(finfo.fileName());
@@ -269,22 +275,30 @@ void mainWindow::on_newButt_clicked(){
 		if(!root.mkpath(newpath+text)) qCritical() << "Could not create folder '" + newpath+text + "'. Does it already exist?";
 		return;
 	}
-	QFile shittyImplementation(newpath+text);//file		//!!!! deletes all file contents...v maybe fixes it?
-	if(!shittyImplementation.open(QIODevice::WriteOnly | QIODevice::Text) || shittyImplementation.exists()){
-		qCritical() << "Could not create file '" + newpath+text + "'.";
+
+	QFile shittyImplementation(newpath+text);//file
+	if(shittyImplementation.exists()){ //this seems to do nothing, but i am too scared to remove it and too lazy to test it
+		qCritical() << "File '" + newpath+text + "' already exists bro.";
+		return;
+	}
+	if(!shittyImplementation.open(QIODevice::WriteOnly | QIODevice::Text)){
+		qCritical() << "Could not create file '" + newpath+text + "'";
 		return;
 	}
 	shittyImplementation.close();
 }
 
 void mainWindow::on_renameButt_clicked(){
+	if(cPath==""){
+		qCritical() << "Bruh, how about you select something first?";
+		return;
+	}
 	QDir root;
 	QFileInfo finfo(cPath);
-	QString newpath;	//recycled code, yeah
-	if(finfo.isFile()){
-			newpath = root.filePath(cPath);
-			newpath.remove(finfo.fileName());
-	} else newpath = cPath+"/";
+	QString newpath;
+	newpath = root.filePath(cPath);
+	newpath.remove(finfo.fileName());
+
 	if(newpath == "/") newpath = "./";
 
 	bool ok;
@@ -295,12 +309,20 @@ void mainWindow::on_renameButt_clicked(){
 		return;
 	}
 
-	QFile::rename(cPath, newpath+text);
+	if(finfo.isFile()){
+		QFile::rename(cPath, newpath+text);
+		return;
+	} else {
+		root.rename(cPath, newpath+text);
+	}
 }
 
 void mainWindow::on_rmButt_clicked(){
 	//maybe ask for a confirmation?
-	//also warn user about the inevitable segfualt if they are dumb
+	if(cPath == wPath){
+		wPath = "";
+		deleteActiveWidget();
+	}
 	if(cPath==""){
 		qCritical() << "Bruh, how about you select something first?";
 		return;

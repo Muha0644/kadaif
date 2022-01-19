@@ -17,13 +17,8 @@ class mainWindow : public QMainWindow{
 	~mainWindow();
 
 	QString cPath;
+	QString wPath;
 	dataClass* liveDB;
-
-	void nonononoedit();
-	void nonononodelete();
-	void nononononew();
-	void nonononodup();
-	void nonononoemty();
 
 	private slots:
 	void on_openFolder_triggered();
@@ -31,12 +26,20 @@ class mainWindow : public QMainWindow{
 	void on_fileListThing_doubleClicked(const QModelIndex &index);
 	void on_actionLocalization_editor_triggered();
 	void openMainWidget(QString path);
-	void on_newButt_clicked();
-	void on_rmButt_clicked();
 	void on_fileListThing_clicked(const QModelIndex &index);
+	void on_newButt_clicked();
 	void on_renameButt_clicked();
+	void on_rmButt_clicked();
 
 	private:
+	void deleteActiveWidget();
+
+	void nonononoedit();
+	void nonononodelete();
+	void nononononew();
+	void nonononodup();
+	void nonononoemty();
+
 	QFileSystemModel *folderModel;
 	Ui::mainWindow *ui;
 	//QWidget *activeWidget;
