@@ -13,6 +13,7 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
 # Installation
  Download a binary from the [releases tab](https://github.com/Muha0644/kadaif/releases), or compile from source if you want the latest and greatest. If you use a Mac... I'm really sorry for you. Here, have a cookie 🍪<br>
  Anyway here is how to compile from source if you want to:<br>
+ ## Install Qt
  ### <em>Windows</em>
   You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account.
 ### <em>Linux</em>
