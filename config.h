@@ -5,6 +5,8 @@
  * remove the comment and recompile kadaif.
  */
 
+// Compatibility option if you want to edit pre-1.11 mods (mostly changes loc)
+//#define NNSB
 
 // Removes the "title" when editing a file. By "title" I mean the name of the file being edited.
 //#define NOTITLE

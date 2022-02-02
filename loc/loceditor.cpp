@@ -21,6 +21,37 @@ void locHighlighter::highlightBlock(const QString& text){
 
 }*/
 
+
+
+/*void Dialog::setFont()
+{
+	const QFontDialog::FontDialogOptions options = QFlag(fontDialogOptionsWidget->value());
+
+	const QString &description = fontLabel->text();
+	QFont defaultFont;
+	if (!description.isEmpty())
+		defaultFont.fromString(description);
+
+	bool ok;
+	QFont font = QFontDialog::getFont(&ok, defaultFont, this, "Select Font", options);
+	if (ok) {
+		fontLabel->setText(font.key());
+		fontLabel->setFont(font);
+	}
+}
+
+void Dialog::setColor()
+{
+	const QColorDialog::ColorDialogOptions options = QFlag(colorDialogOptionsWidget->value());
+	const QColor color = QColorDialog::getColor(Qt::green, this, "Select Color", options);
+
+	if (color.isValid()) {
+		colorLabel->setText(color.name());
+		colorLabel->setPalette(QPalette(color));
+		colorLabel->setAutoFillBackground(true);
+	}
+}*/
+
 void locEditor::on_textEdit_textChanged(){
 	if(windowTitle().startsWith("*")) return;
 	setWindowTitle("* " + windowTitle());
@@ -91,15 +122,20 @@ locEditor::~locEditor(){
 	delete ui;
 }
 
-void locEditor::on_saveButton_clicked(){
+void locEditor::on_saveButton_clicked(){	// new line is buggy
 	entry.value = ui->textEdit->toPlainText();
 	if(entry.file == ""){
 		return; //it should be copied to clipboard, but not now.
 	}
+	QSettings settings("muha0644","Kadaif");
+#ifdef NNSB
 	QString path = "localisation/" + entry.file;
+#else
+	QString path = "localisation/" + settings.value("loclang", "english").toString() + "/" + entry.file;
+#endif
 	QList<QString> *loceList = parseLocFile(path);
 	if(entry.key == ""){
-		loceList->replace(entry.line-1, entry.value);
+		loceList->replace(entry.line-1, entry.value.startsWith(" ")? entry.value : " " + entry.value);
 	} else {
 		loceList->replace(entry.line-1, " " + entry.key + ":0 " + entry.value);
 	}
@@ -109,6 +145,8 @@ void locEditor::on_saveButton_clicked(){
 	setWindowTitle(entry.key);
 	emit saved(path);
 	this->destroy();
+	delete this->liveDB->locAll;
+	this->liveDB->locAll = loadLoc();
 }
 
 

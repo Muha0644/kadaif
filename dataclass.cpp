@@ -19,7 +19,7 @@ void messHandler(QtMsgType type, const QMessageLogContext &context, const QStrin
 			break;
 
 		case QtInfoMsg:		//Something that does not directly cause issues: parsing errors,
-			//fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+			fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 			break;
 
 		case QtWarningMsg:{	//Something that the user should be warned about: duplicate loc entry,

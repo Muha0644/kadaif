@@ -36,3 +36,4 @@
 .vscode/
 *.autosave
 build/
+CMakeLists.txt.user

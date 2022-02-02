@@ -59,6 +59,7 @@ QHash<QString, locEntry>* loadLoc(){
 	QHash<QString, locEntry>* locAll = new QHash<QString, locEntry>;
 	QSettings settings("muha0644","Kadaif");
 	settings.setValue("locDup", "");
+	QString lang = settings.value("loclang", "english").toString(); //!! add something to change default loclang
 
 	QDir locDir(".");												//!!!!!!!!!
 	if(!locDir.cd("localisation")){		//what if it doesn't exist?
@@ -70,12 +71,22 @@ QHash<QString, locEntry>* loadLoc(){
 		}
 		locDir.cd("localisation");
 	}
+#ifndef NNSB
+	if(!locDir.cd(lang)){		//what if it doesn't exist?
+		if(!locDir.mkdir(lang)){
+			qCritical() << "Failed to create \"localisation/" + lang + "\" folder. Something is seriously wrong.";
+			delete locAll;
+			return nullptr;
+		}
+		locDir.cd(lang);
+	}
+#endif
 
 	QStringList files = locDir.entryList(QStringList() << "*.yml",QDir::Files);
 	foreach(QString filename, files){	//open each file and add entries to the hashmap
 		QFile file(locDir.absoluteFilePath(filename));
 		if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-			qCritical() << "Failed to open file localisation file" << filename << ":" <<file.errorString();
+			qCritical() << "Failed to open localisation file" << filename << ":" <<file.errorString();
 			//return nullptr;
 			continue;
 		}
