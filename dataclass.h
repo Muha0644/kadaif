@@ -1,8 +1,9 @@
 #pragma once
 #include "config.h"
+#include <loc/locstuff.h>
+#include <gfx/gfxstuff.h>
 #include <QHash>
 #include <QString>
-#include <loc/locstuff.h>
 #include <QObject>
 #include <QList>
 #include <stdio.h>
@@ -16,6 +17,7 @@ public:
 	~dataClass();
 
 	QHash<QString, locEntry>* locAll;
+	QHash<QString, gfxEntry>* gfxAll;
 
 signals:
 

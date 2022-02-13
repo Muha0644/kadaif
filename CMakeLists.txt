@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
 				loc/loceditor.h
 				loc/loceditor.cpp
 				loc/loceditor.ui
+				gfx/gfxstuff.h
+				gfx/gfxstuff.cpp
 				sharedassets0.qrc
 )
 

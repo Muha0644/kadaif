@@ -11,6 +11,7 @@
 #include "parser.h"
 #include "loc/locstuff.h"
 #include "loc/loceditor.h"
+#include "gfx/gfxstuff.h"
 
 
 mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent), ui(new Ui::mainWindow){
@@ -35,6 +36,7 @@ mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent
 
 		if(!liveDB->locAll){		//should be the first and only time it's initialised
 			liveDB->locAll = loadLoc();
+			liveDB->gfxAll = loadGfx();
 		}
 	}
 	ui->splitter->restoreState(settings.value("splitterSizes").toByteArray());
@@ -242,6 +244,7 @@ void mainWindow::on_openFolder_triggered(){	//open mod folder in sidebar
 
 	if(!liveDB->locAll){		//should be the first and only time it's initialised
 		liveDB->locAll = loadLoc();
+		liveDB->gfxAll = loadGfx();
 	}
 }
 
