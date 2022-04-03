@@ -71,7 +71,8 @@ QHash<QString, locEntry>* loadLoc(){
 		}
 		locDir.cd("localisation");
 	}
-#ifndef NNSB
+
+	/*//this might cause trouble. It was #ifndef NNSB so maybe remove it?
 	if(!locDir.cd(lang)){		//what if it doesn't exist?
 		if(!locDir.mkdir(lang)){
 			qCritical() << "Failed to create \"localisation/" + lang + "\" folder. Something is seriously wrong.";
@@ -79,8 +80,8 @@ QHash<QString, locEntry>* loadLoc(){
 			return nullptr;
 		}
 		locDir.cd(lang);
-	}
-#endif
+	}*/
+
 
 	QStringList files = locDir.entryList(QStringList() << "*.yml",QDir::Files);
 	foreach(QString filename, files){	//open each file and add entries to the hashmap

@@ -75,11 +75,10 @@ locEditor::locEditor(QWidget *parent): QWidget(parent),	ui(new Ui::locEditor){		
 	//ui->textEdit->setPlainText();
 }
 
-locEditor::locEditor(dataClass *liveDB,QListWidgetItem *item, QWidget *parent): QWidget(parent), ui(new Ui::locEditor){ //opened by double clicking an item
+locEditor::locEditor(QListWidgetItem *item, QWidget *parent): QWidget(parent), ui(new Ui::locEditor){ //opened by double clicking an item
 	QSettings settings("muha0644","Kadaif");
 	restoreGeometry(settings.value("locedit/geometry").toByteArray());
 	ui->setupUi(this);
-	this->liveDB = liveDB;
 
 	QFont font;
 	font.setFamily("Courier");
@@ -103,7 +102,7 @@ locEditor::locEditor(dataClass *liveDB,QListWidgetItem *item, QWidget *parent): 
 		qInfo() << "Error parsing loc item:" << item->text() << ". Make sure there is only one ':0' on this line";
 		return; //maybe an error popup?
 	} else{			//an actual entry has been found
-		entry = liveDB->locAll->value(stuff[0]);
+		entry = liveDB.locAll->value(stuff[0]);
 
 		//TODO: make it be nice maybe just add a preview window?
 		//auto text = entry.value.split('"',Qt::SkipEmptyParts);
@@ -128,11 +127,8 @@ void locEditor::on_saveButton_clicked(){	// new line is buggy
 		return; //it should be copied to clipboard, but not now.
 	}
 	QSettings settings("muha0644","Kadaif");
-#ifdef NNSB
 	QString path = "localisation/" + entry.file;
-#else
-	QString path = "localisation/" + settings.value("loclang", "english").toString() + "/" + entry.file;
-#endif
+
 	QList<QString> *loceList = parseLocFile(path);
 	if(entry.key == ""){
 		loceList->replace(entry.line-1, entry.value.startsWith(" ")? entry.value : " " + entry.value);
@@ -141,12 +137,12 @@ void locEditor::on_saveButton_clicked(){	// new line is buggy
 	}
 	saveLocFile(loceList, path);
 
-	liveDB->locAll->insert(entry.key, entry);
+	liveDB.locAll->insert(entry.key, entry);
 	setWindowTitle(entry.key);
 	emit saved(path);
 	this->destroy();
-	delete this->liveDB->locAll;
-	this->liveDB->locAll = loadLoc();
+	delete this->liveDB.locAll;
+	this->liveDB.locAll = loadLoc();
 }
 
 

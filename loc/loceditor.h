@@ -46,11 +46,11 @@ class locEditor : public QWidget{
 
 	public:
 	locEditor(QWidget *parent = nullptr);
-	locEditor(dataClass *liveDB, QListWidgetItem *item, QWidget *parent = nullptr);
+	locEditor(QListWidgetItem *item, QWidget *parent = nullptr);
 	~locEditor();
 
 	locEntry entry;
-	dataClass *liveDB;
+	dataClass& liveDB = dataClass::getReference();
 
 	private slots:
 	void on_textEdit_textChanged();

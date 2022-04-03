@@ -1,12 +1,18 @@
 #include "dataclass.h"
 
+dataClass& dataClass::getReference(){
+	static dataClass instance;
+	return instance;
+};
 
 dataClass::dataClass(QObject *parent): QObject(parent){
 	locAll = nullptr;
+	gfxAll = nullptr;
 }
 
 dataClass::~dataClass(){
 	delete locAll;
+	delete gfxAll;
 }
 
 void messHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg){

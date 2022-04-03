@@ -9,15 +9,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-class dataClass: public QObject{
+class dataClass: public QObject{ //my first singleton :)
 	Q_OBJECT
 
 public:
-	explicit dataClass(QObject *parent = nullptr);
-	~dataClass();
+	static dataClass& getReference();
 
 	QHash<QString, locEntry>* locAll;
 	QHash<QString, gfxEntry>* gfxAll;
+
+private:
+	explicit dataClass(QObject *parent = nullptr);
+	~dataClass();
 
 signals:
 

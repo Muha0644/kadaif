@@ -8,13 +8,12 @@
 
 
 int main(int argc, char *argv[]){
-	dataClass *liveDB = new dataClass;
 	qInstallMessageHandler(messHandler);
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/shared/taskbaricon.png"));
 
 
-	mainWindow mainW(liveDB);
+	mainWindow mainW;
 	mainW.show();
 
 	//QObject::connect(&mainW, &QMainWindow::destroyed, &app, &QApplication::quit);

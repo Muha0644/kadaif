@@ -9,13 +9,13 @@
 #include <QLayout>
 #include <QSpacerItem>
 #include "parser.h"
+#include "config.h"
 #include "loc/locstuff.h"
 #include "loc/loceditor.h"
 #include "gfx/gfxstuff.h"
 
 
-mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent), ui(new Ui::mainWindow){
-	this->liveDB = dataClass;
+mainWindow::mainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::mainWindow){
 	QSettings settings("muha0644","Kadaif");
 	restoreGeometry(settings.value("main/geometry").toByteArray());
 	restoreState(settings.value("main/windowState").toByteArray());
@@ -34,14 +34,14 @@ mainWindow::mainWindow(dataClass *dataClass,QWidget *parent): QMainWindow(parent
 		ui->fileListThing->hideColumn(3);
 		QDir::setCurrent(path);
 
-		if(!liveDB->locAll){		//should be the first and only time it's initialised
-			liveDB->locAll = loadLoc();
-			liveDB->gfxAll = loadGfx();
+		if(!liveDB.locAll){		//should be the first and only time it's initialised
+			liveDB.locAll = loadLoc();
+			liveDB.gfxAll = loadGfx();
 		}
 	}
 	ui->splitter->restoreState(settings.value("splitterSizes").toByteArray());
 
-#ifdef COOLBUTTONBAR
+#ifdef CoolButtonBar
 	ui->extraButt->setFrameShape(QFrame::Panel);
 	ui->extraButt->setFrameShadow(QFrame::Raised); //optimised for dark theme on linux
 #endif
@@ -63,10 +63,10 @@ void mainWindow::on_actionLocalization_editor_triggered(){
 }
 
 void mainWindow::nonononoedit(){			//SHOULD HAVE USED AN OBJECT
-	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);	//!!! this will bug out if NOTITLE is defined
+	QListWidget *real = static_cast<QListWidget*>(activeWidget->children()[5]);
 	int cRow = real->currentRow();
 	if(cRow < 0) return;
-	locEditor *locw = new locEditor(liveDB,real->item(cRow));
+	locEditor *locw = new locEditor(real->item(cRow));
 	locw->setAttribute(Qt::WA_DeleteOnClose);
 	locw->setAttribute( Qt::WA_QuitOnClose, false );
 	locw->show();
@@ -119,7 +119,7 @@ void mainWindow::nonononodup(){
 void mainWindow::nonononoemty(){
 	QString empty;
 	///QSettings settings("muha0644", "Kadaif");
-	foreach(auto entry, this->liveDB->locAll->values()){
+	foreach(auto entry, liveDB.locAll->values()){
 		if(entry.value.replace("\"", "").trimmed() == ""){
 			empty.append("Empty value found: " + entry.key + "\n" + entry.file + " on line: " + QString::number(entry.line) + "\n\n");
 		};
@@ -139,7 +139,7 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	QPushButton *newButt = new QPushButton("New entry under selection");
 	QPushButton *deleteButt = new QPushButton("Delete selection");
 	QSpacerItem *spase = new QSpacerItem(10000,20,QSizePolicy::Preferred);
-#ifndef NOTITLE
+#ifndef NoTitle
 	vLayout->setContentsMargins(5, 2, 0, 0);
 	QLabel *title = new QLabel(path);
 	QFont font;
@@ -147,6 +147,8 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	font.setPointSize(12);
 	title->setFont(font);
 	vLayout->addWidget(title);
+#else
+	vLayout->addWidget(new QWidget);
 #endif
 
 	//I don't want to convert everything into an object, even though it would be better
@@ -242,9 +244,9 @@ void mainWindow::on_openFolder_triggered(){	//open mod folder in sidebar
 	ui->fileListThing->hideColumn(2);
 	ui->fileListThing->hideColumn(3);
 
-	if(!liveDB->locAll){		//should be the first and only time it's initialised
-		liveDB->locAll = loadLoc();
-		liveDB->gfxAll = loadGfx();
+	if(!liveDB.locAll){		//should be the first and only time it's initialised
+		liveDB.locAll = loadLoc();
+		liveDB.gfxAll = loadGfx();
 	}
 }
 

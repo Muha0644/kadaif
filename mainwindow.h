@@ -13,12 +13,12 @@ class mainWindow : public QMainWindow{
 	Q_OBJECT
 
 	public:
-	mainWindow(dataClass *dataClass,QWidget *parent = nullptr);
+	mainWindow(QWidget *parent = nullptr);
 	~mainWindow();
 
 	QString cPath;
 	QString wPath;
-	dataClass* liveDB;
+	dataClass& liveDB = dataClass::getReference();;
 
 	private slots:
 	void on_openFolder_triggered();
