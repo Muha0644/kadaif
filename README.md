@@ -6,8 +6,9 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
 
 ### Kadaif has cool features such as:
 * automatic code generation
-* your mom
+* localization editor
 * convert all `.dds` files to BC3/DTX5 (to save space)
+* _more features to be added in full release!_
 <br><br>
 
 # Installation
