@@ -6,9 +6,6 @@
 #include <QList>
 #include <QRegularExpression>
 
-/*locstuff::locstuff(QObject *parent) : QObject(parent){
-
-}*/
 
 QList<QString>* parseLocFile(QString &path){
 	QFile file(path);

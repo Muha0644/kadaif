@@ -6,14 +6,6 @@
 #include <QTextStream>
 #include <QHash>
 
-/*class locstuff: public QObject{
-	Q_OBJECT
-	public:
-	explicit locstuff(QObject *parent = nullptr);
-
-	signals:
-
-};*/
 
 struct locEntry{
 	QString file;
