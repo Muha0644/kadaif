@@ -23,9 +23,10 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
  RedHat: [same]<br>
 
 ### <em>Compile Qt from source</em>
- You can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it if you don't want to make an account you will never need. To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). If you followed the guide correctly you should already have all the dependencies you need.
+ You can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it if you don't want to make an account you will never need. To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). 
  ## Install Kadaif
-  Now that you have everything you need, download and install kadaif:
+  First make sure you have `openimageio` installed, then 
+  download and install kadaif:
 * `git clone https://github.com/Muha0644/kadaif`
 * `cd kadaif`
 * `cmake .`
