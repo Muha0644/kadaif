@@ -11,10 +11,8 @@ gfxeditor::gfxeditor(const gfxEntry &entry, QWidget *parent): QDialog(parent), u
 	pngvju = new PngView(pngify(entry.texturepath));
 	ui->preview->addWidget(pngvju);
 
-	QFont font;
-	font.setFamily("Courier");
+	QFont font(FONT_SERIF, 11);
 	font.setFixedPitch(false);
-	font.setPointSize(11);
 
 	ui->nameEdit->setFont(font);
 	ui->nameEdit->setText(entry.key);

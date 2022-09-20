@@ -109,9 +109,7 @@ gfxWidget::gfxWidget(QString &path, QObject* parent){
 #ifndef NoTitle
 	vLayout->setContentsMargins(5, 2, 0, 0);
 	QLabel *title = new QLabel(path);
-	QFont font;
-	font.setBold(true);
-	font.setPointSize(12);
+	QFont font(FONT_SANS, 12, QFont::Bold);
 	title->setFont(font);
 	vLayout->addWidget(title);
 #endif

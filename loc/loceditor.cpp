@@ -62,11 +62,8 @@ locEditor::locEditor(QWidget *parent): QWidget(parent),	ui(new Ui::locEditor){		
 	restoreGeometry(settings.value("locedit/geometry").toByteArray());
 	ui->setupUi(this);
 
-	QFont font;
-	font.setFamily("Courier");
+	QFont font(FONT_SERIF, 11);
 	font.setFixedPitch(false);
-	font.setPointSize(11);
-
 	ui->textEdit->setFont(font);
 
 	//locHigh = new locHighlighter(ui->textEdit->document());
@@ -80,11 +77,8 @@ locEditor::locEditor(QListWidgetItem *item, QWidget *parent): QWidget(parent), u
 	restoreGeometry(settings.value("locedit/geometry").toByteArray());
 	ui->setupUi(this);
 
-	QFont font;
-	font.setFamily("Courier");
+	QFont font(FONT_SERIF, 11);
 	font.setFixedPitch(false);
-	font.setPointSize(11);
-
 	ui->textEdit->setFont(font);
 
 	//locHigh = new locHighlighter(ui->textEdit->document());	//don't have one yet

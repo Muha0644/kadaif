@@ -31,3 +31,8 @@
 // What to use for EOL. "\n" for LF, "\r\n" for CRLF.
 // Default is CRLF because most people use windows (sadly) and don't know what this means.
 #define NEWLINE "\r\n"
+
+// What fonts do you want to use. I could have made it editable without recompiling, but i chose not to.
+// Qt will try to find the closest match if an exact one can't be found.
+#define FONT_SERIF "Courier"
+#define FONT_SANS "sans-serif"

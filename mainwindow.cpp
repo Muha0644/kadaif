@@ -140,9 +140,7 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 #ifndef NoTitle
 	vLayout->setContentsMargins(5, 2, 0, 0);
 	QLabel *title = new QLabel(path);
-	QFont font;
-	font.setBold(true);
-	font.setPointSize(12);
+	QFont font(FONT_SANS, 12, QFont::Bold);
 	title->setFont(font);
 	vLayout->addWidget(title);
 #else // avoid segfaults with this one simple trick!
@@ -232,7 +230,7 @@ void mainWindow::openMainWidget(QString path){
 #ifndef NoTitle
 			vLayout->setContentsMargins(5, 2, 0, 0);
 			QLabel *title = new QLabel(path);
-			QFont font; font.setBold(true); font.setPointSize(12);
+			QFont font(FONT_SANS, 12, QFont::Bold);
 			title->setFont(font);
 			vLayout->addWidget(title);
 #endif
