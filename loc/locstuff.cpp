@@ -11,7 +11,7 @@ QList<QString>* parseLocFile(QString &path){
 	QFile file(path);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 		qCritical() << "Failed to open file" << path << "for parsing.";
-		return nullptr;
+		return new QList<QString>; //don't return nullptr
 	}
 
 	QTextStream in(&file);
@@ -64,7 +64,7 @@ QHash<QString, locEntry>* loadLoc(){
 			qCritical() << "Failed to create \"localisation\" folder. Something is seriously wrong.";
 			//should abort now soooo
 			delete locAll; //don't want to cause a memory leak...
-			return nullptr; //maybe it's better to just return an empty QHash?
+			return new QHash<QString, locEntry>; // it's better to just return an empty QHash
 		}
 		locDir.cd("localisation");
 	}
@@ -72,7 +72,7 @@ QHash<QString, locEntry>* loadLoc(){
 		if(!locDir.mkdir(lang)){
 			qCritical() << "Failed to create \"localisation/" + lang + "\" folder. Something is seriously wrong.";
 			delete locAll;
-			return nullptr;
+			return new QHash<QString, locEntry>;
 		}
 		locDir.cd(lang);
 	}
@@ -82,7 +82,7 @@ QHash<QString, locEntry>* loadLoc(){
 		QFile file(locDir.absoluteFilePath(filename));
 		if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 			qCritical() << "Failed to open localisation file" << filename << ":" <<file.errorString();
-			//return nullptr;
+			//return new QHash<QString, locEntry>;
 			continue;
 		}
 		QTextStream in(&file);

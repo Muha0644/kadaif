@@ -86,7 +86,7 @@ QHash<QString, gfxEntry>* loadGfx(){	//loads all the gfx
 		if(!gfxDir.mkdir("interface")){
 			qCritical() << "Failed to create \"interface\" folder. Something is seriously wrong.";
 			delete gfxAll; //abortus
-			return nullptr;
+			return new QHash<QString, gfxEntry>; //don't return nullptr
 		}
 		gfxDir.cd("interface");
 	}
