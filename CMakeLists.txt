@@ -18,20 +18,13 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 set(PROJECT_SOURCES
 				main.cpp
 				config.h
-				mainwindow.cpp
-				parser.cpp
-				parser.h
-				mainwindow.h
-				mainwindow.ui
-				dataclass.h
-				dataclass.cpp
-				loc/locstuff.h
-				loc/locstuff.cpp
-				loc/loceditor.h
-				loc/loceditor.cpp
-				loc/loceditor.ui
-				gfx/gfxstuff.h
-				gfx/gfxstuff.cpp
+				mainwindow.h mainwindow.cpp mainwindow.ui
+				parser.h parser.cpp
+				dataclass.h dataclass.cpp
+				loc/locstuff.h loc/locstuff.cpp
+				loc/loceditor.h loc/loceditor.cpp loc/loceditor.ui
+				gfx/gfxstuff.h gfx/gfxstuff.cpp
+				gfx/gfxeditor.h gfx/gfxeditor.cpp gfx/gfxeditor.ui
 				sharedassets0.qrc
 )
 

@@ -7,6 +7,7 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
 ### Kadaif has cool features such as:
 * automatic code generation
 * localization editor
+* gfx/spriteType editor
 * convert all `.dds` files to BC3/DTX5 (to save space)
 * _more features to be added in full release!_
 <br><br>
@@ -14,15 +15,15 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
 # Installation
  Download a binary from the [releases tab](https://github.com/Muha0644/kadaif/releases), or compile from source if you want the latest and greatest. If you use a Mac... I'm really sorry for you. Here, have a cookie 🍪<br>
  Anyway here is how to compile from source if you want to:<br>
- ## Install Qt
- ### <em>Windows</em>
-  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account.
-### <em>Linux</em>
- Arch: `sudo pacman -Syu qt6-base qt6-doc qt6-tools qt6-translations`<br>
+ ## Install Qt & Dependencies
+  ### <em>Windows</em>
+  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. You will also need to install OpenImageIO, so that the command `iconvert` works when run from cmd. (basically make sure `iconvert.exe` exists in your system32 directory or other place that windows knows about)
+  ### <em>Linux</em>
+ Arch: `sudo pacman -Syu qt6-base qt6-doc qt6-tools qt6-translations openimageio`<br>
  Debian: [idk, you can make a PR to add the command]<br>
  RedHat: [same]<br>
 
-### <em>Compile Qt from source</em>
+  ### <em>Compile Qt from source</em>
  You can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it if you don't want to make an account you will never need. To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). 
  ## Install Kadaif
   First make sure you have `openimageio` installed, then 

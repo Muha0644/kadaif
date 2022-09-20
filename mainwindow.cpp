@@ -80,15 +80,13 @@ void mainWindow::nonononodelete(){			//THIS SHOULD NOT BE IN `mainWindow`
 
 	int cRow = real->currentRow();
 
-	if(cRow != -1){//bruh segfault
+	if(cRow != -1){//-1 means nothing is selected
 		fileLocList->remove(cRow);
 		real->clear();
 		QString entry;
 		foreach(entry, *fileLocList){
 			real->addItem(entry);
 		}
-	} else {
-		qDebug() << "!!!!!!!!!!!!!!!!!!!cRow is -1!!!!!!!!!!!!!!!!!!!!!!";	//remove if never reached
 	}
 	real->setCurrentRow(cRow);
 	saveLocFile(fileLocList, cPath);
@@ -121,7 +119,7 @@ void mainWindow::nonononoemty(){
 	///QSettings settings("muha0644", "Kadaif");
 	foreach(auto entry, liveDB.locAll->values()){
 		if(entry.value.replace("\"", "").trimmed() == ""){
-			empty.append("Empty value found: " + entry.key + "\n" + entry.file + " on line: " + QString::number(entry.line) + "\n\n");
+			empty.append("Empty value found: " + entry.key + "\nin " + entry.file + " on line " + QString::number(entry.line) + "\n\n");
 		};
 	}
 	QMessageBox msgBox;
@@ -134,7 +132,7 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	QListWidget *locListWidget = new QListWidget;
 	QWidget *holder = new QWidget;
 	QVBoxLayout *vLayout = new QVBoxLayout(holder);		//do kids get deleted? I think they do.
-	QHBoxLayout *buttonBar = new QHBoxLayout;
+	QHBoxLayout *buttonBar = new QHBoxLayout;			//!!! TODO: use unique_ptr
 	QPushButton *editButt = new QPushButton("Edit");	//can also pass an icon as an argument.
 	QPushButton *newButt = new QPushButton("New entry under selection");
 	QPushButton *deleteButt = new QPushButton("Delete selection");
@@ -147,7 +145,7 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	font.setPointSize(12);
 	title->setFont(font);
 	vLayout->addWidget(title);
-#else
+#else // avoid segfaults with this one simple trick!
 	vLayout->addWidget(new QWidget);
 #endif
 
@@ -216,7 +214,31 @@ void mainWindow::openMainWidget(QString path){
 			container->addWidget(findEmty,0,1);
 			break;}
 		case gfx:{
-
+			gfxWidget *gw = new gfxWidget(path);
+			activeWidget = (QWidget*)gw;
+			ui->splitter->addWidget(activeWidget);
+			QGridLayout *container = new QGridLayout(ui->extraButt);
+			QPushButton *checkDup = new QPushButton("Show duplicates");
+			QPushButton *findEmpty = new QPushButton("Find empty keys");
+			connect(findEmpty, &QPushButton::clicked, gw, &gfxWidget::empty);
+			connect(checkDup, &QPushButton::clicked, gw, &gfxWidget::dup);
+			container->addWidget(checkDup,0,0);
+			container->addWidget(findEmpty,0,1);
+			break;}
+		case image:{
+			QWidget *imgW = new QWidget;
+			QVBoxLayout *vLayout = new QVBoxLayout(imgW);
+			PngView* pngvju = new PngView(pngify(path));
+#ifndef NoTitle
+			vLayout->setContentsMargins(5, 2, 0, 0);
+			QLabel *title = new QLabel(path);
+			QFont font; font.setBold(true); font.setPointSize(12);
+			title->setFont(font);
+			vLayout->addWidget(title);
+#endif
+			vLayout->addWidget(pngvju);
+			activeWidget = imgW;
+			ui->splitter->addWidget(imgW);
 			break;}
 		case nothing:	//should never reach here
 		default:

@@ -17,3 +17,17 @@
 
 // Adds more BASS youtu.be/bZWzm3aFhTU
 //#define MANGOONAFORK
+
+// Optimize code for rendering pixelart. Use bilinear filtering when disabled.
+#define PIXELART
+
+// Maximum size of images when zooming in/out
+#define MAX_SCALE 5.0
+#define MIN_SCALE 0.2
+
+// Relative amount to zoom in/out by for each step
+#define SCALE_FACTOR 1.25
+
+// What to use for EOL. "\n" for LF, "\r\n" for CRLF.
+// Default is CRLF because most people use windows (sadly) and don't know what this means.
+#define NEWLINE "\r\n"

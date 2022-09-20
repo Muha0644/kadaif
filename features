@@ -1,10 +1,17 @@
 LOC:
-    -view all entries as a QHash
-    -view by file
-    -edit entries in a file
+    -view all entries
+    -view and edit by file
     -add and delete entries
     -find duplicate entries
     -find empty keys
 
+GFX:
+    -view all entires
+    -view and edit by file
+    -find duplicate entries
+    -find empty keys
+    -preview spriteTypes with icons
+    -preview all images
+    
 
 NOT IMPLEMENTED:
