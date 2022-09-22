@@ -6,11 +6,11 @@
  */
 
 // Removes the "title" when editing a file. By "title" I mean the name of the file being edited.
-//#define NoTitle
+#define NO_TITLE false
 
-// Makes the dynamic button bar look cooler. Disabled by default as it depends on wether you are
+// Makes the dynamic button panel look cooler. Disabled by default as it depends on wether you are
 // using a light or dark theme. The default is a lame flat panel.
-#define CoolButtonBar
+#define COOL_PANEL true
 
 // do not enable under any circumstance
 //#define KAWAII
@@ -19,7 +19,7 @@
 //#define MANGOONAFORK
 
 // Optimize code for rendering pixelart. Use bilinear filtering when disabled.
-#define PIXELART
+#define PIXELART true
 
 // Maximum size of images when zooming in/out
 #define MAX_SCALE 5.0

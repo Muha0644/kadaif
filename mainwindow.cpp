@@ -41,7 +41,7 @@ mainWindow::mainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::mainWin
 	}
 	ui->splitter->restoreState(settings.value("splitterSizes").toByteArray());
 
-#ifdef CoolButtonBar
+#if COOL_PANEL
 	ui->extraButt->setFrameShape(QFrame::Panel);
 	ui->extraButt->setFrameShadow(QFrame::Raised); //optimised for dark theme on linux
 #endif
@@ -137,7 +137,7 @@ QWidget* mainWindow::setUpLocList(QString &path){			//holy fucking shit i should
 	QPushButton *newButt = new QPushButton("New entry under selection");
 	QPushButton *deleteButt = new QPushButton("Delete selection");
 	QSpacerItem *spase = new QSpacerItem(10000,20,QSizePolicy::Preferred);
-#ifndef NoTitle
+#if !NO_TITLE
 	vLayout->setContentsMargins(5, 2, 0, 0);
 	QLabel *title = new QLabel(path);
 	QFont font(FONT_SANS, 12, QFont::Bold);
@@ -227,7 +227,7 @@ void mainWindow::openMainWidget(QString path){
 			QWidget *imgW = new QWidget;
 			QVBoxLayout *vLayout = new QVBoxLayout(imgW);
 			PngView* pngvju = new PngView(pngify(path));
-#ifndef NoTitle
+#if !NO_TITLE
 			vLayout->setContentsMargins(5, 2, 0, 0);
 			QLabel *title = new QLabel(path);
 			QFont font(FONT_SANS, 12, QFont::Bold);

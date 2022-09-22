@@ -106,7 +106,7 @@ gfxWidget::gfxWidget(QString &path, QObject* parent){
 	QPushButton *newButt = new QPushButton("New GFX entry");
 	QPushButton *deleteButt = new QPushButton("Delete selection");
 	QSpacerItem *spase = new QSpacerItem(10000,20,QSizePolicy::Preferred);
-#ifndef NoTitle
+#if !NO_TITLE
 	vLayout->setContentsMargins(5, 2, 0, 0);
 	QLabel *title = new QLabel(path);
 	QFont font(FONT_SANS, 12, QFont::Bold);
@@ -267,7 +267,7 @@ PngView::PngView(const QString& pngPath, QWidget *parent): QGraphicsView(parent)
 	scene = new QGraphicsScene;
 	item = scene->addPixmap(QPixmap(pngPath));//new QGraphicsPixmapItem(QPixmap(pngPath));
 	//at least i'm not heap allocating... easier to delete...
-#ifndef PIXELART
+#if !PIXELART
 	item->setTransformationMode(Qt::SmoothTransformation);
 #endif
 	setScene(scene);
@@ -277,7 +277,7 @@ void PngView::change(const QString& pngPath){//does not work. will not work. wil
 	scene->clear();
 	QPixmap *mm = new QPixmap(pngPath);
 	item = scene->addPixmap(*mm);
-#ifndef PIXELART
+#if !PIXELART
 	item->setTransformationMode(Qt::SmoothTransformation);
 #endif
 	scene->update();
