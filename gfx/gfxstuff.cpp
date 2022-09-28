@@ -153,9 +153,16 @@ void gfxWidget::deletethis(){
 }
 void gfxWidget::newthis(){
 	gfxList->insertItem(gfxList->currentRow()+1, " ");
+	gfxEntry newEntry;
+	newEntry.file = curPath.sliced(sizeof("interface")); //should find a better way of doing this...
+	newEntry.line = -(liveDB.gfxAll->value(gfxList->currentItem()->text())).line; //negative number means insert new entry after that line
 	gfxList->setCurrentRow(gfxList->currentRow()+1);
-	//this won't work. Manually make the entry and pass it to the editor.
-	edit();
+
+	gfxeditor *gfxEditW = new gfxeditor(liveDB.gfxAll->insert(" ", newEntry).value());
+	gfxEditW->setAttribute(Qt::WA_DeleteOnClose);
+	gfxEditW->setAttribute( Qt::WA_QuitOnClose, false);
+	gfxEditW->show();
+	connect(gfxEditW, &gfxeditor::saved, this, &gfxWidget::refreshList);
 }
 void gfxWidget::dup(){
 	QSettings settings("muha0644", "Kadaif");
@@ -205,26 +212,35 @@ void loadGfxEntries(QListWidget *content, QString &path){
 void saveAGfxEntry(const gfxEntry &newEntry, const gfxEntry &oldEntry){	//this approach is a bit more surgical than the loc code
 	QFile file("interface/" + newEntry.file);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qCritical() << "Failed to open gfx file" << newEntry.file << "for reading & writing.";
+		qCritical() << "Failed to open gfx file" << newEntry.file << "for reading";
 		return;
 	}
+
 	QString line, buffer;
 	QTextStream stream(&file);
-
-	for(int i = 0; i < oldEntry.line; i++){	// skip to the important part
-		buffer.append(stream.readLine()+NEWLINE);
-	}// should be at the line with "spriteType = {"
-	while(!line.contains("}")){// loop until the end of the entry
-		stream.readLineInto(&line);
-		if(line.trimmed().startsWith("name = ", Qt::CaseInsensitive)){
-			line.replace(oldEntry.key, newEntry.key);
-		} else if(line.trimmed().startsWith("texturefile = ", Qt::CaseInsensitive)){
-			line.replace(oldEntry.texturepath, newEntry.texturepath);
+	if(oldEntry.line > 0){ // negative number means add new entry
+		for(int i = 0; i < oldEntry.line; i++){	// skip to the important part
+			buffer.append(stream.readLine()+NEWLINE);
+		}// should be at the line with "spriteType = {"
+		while(!line.contains("}")){// loop until the end of the entry
+			stream.readLineInto(&line);
+			if(line.trimmed().startsWith("name = ", Qt::CaseInsensitive)){
+				line.replace(oldEntry.key, newEntry.key);
+			} else if(line.trimmed().startsWith("texturefile = ", Qt::CaseInsensitive)){
+				line.replace(oldEntry.texturepath, newEntry.texturepath);
+			}
+			buffer.append(line+NEWLINE);
 		}
-		buffer.append(line+NEWLINE);
-	}
-	while(!stream.atEnd()){//found and replaced the important part, finish buffering the file
-		buffer.append(stream.readLine()+NEWLINE);
+		while(!stream.atEnd()){//found and replaced the important part, finish buffering the file
+			buffer.append(stream.readLine()+NEWLINE);
+		}
+	} else { //adding a new entry to the end.
+		for(int i = 1; i < -oldEntry.line; i++) buffer.append(stream.readLine()+NEWLINE);
+		buffer.append("\tspriteType = {" NEWLINE); //do not question why this works. It does.
+		buffer.append("\t\tname = \"" + newEntry.key + "\"" NEWLINE);
+		buffer.append("\t\ttexturefile = \"" + newEntry.texturepath + "\"" NEWLINE);
+		buffer.append("\t}" NEWLINE);
+		while(!stream.atEnd()) buffer.append(stream.readLine()+NEWLINE);
 	}
 
 	file.close();			//write buffer to stream

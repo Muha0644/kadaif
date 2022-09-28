@@ -45,6 +45,10 @@ void gfxeditor::on_texturefileEdit_textEdited(const QString &arg1){
 }
 
 void gfxeditor::on_Save_released(){
+	if(ui->nameEdit->text().contains(" ")){
+		qCritical() << "GFX name cannot contain spaces: " << ui->nameEdit->text();
+		return;
+	}
 	gfxEntry newEntry;
 	newEntry.file = entry.file;
 	newEntry.line = entry.line;
