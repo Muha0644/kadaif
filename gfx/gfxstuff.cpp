@@ -182,15 +182,24 @@ void loadGfxEntries(QListWidget *content, QString &path){
 	loadGfxFile(gfxEntries, path);
 
 	QHashIterator<QString, gfxEntry> iter(*gfxEntries);
+	QMap<int, gfxEntry> sorted;
 	while(iter.hasNext()){
 		gfxEntry entry = iter.next().value();
+		sorted.insert(entry.line, entry);
+	}
+	delete gfxEntries;
+
+	QMap<int, gfxEntry>::const_iterator i = sorted.constBegin();	//trying out STL-style iterator, instead of java-style
+	while (i != sorted.constEnd()) {
+		gfxEntry entry = i.value();
 		//open the .dds with OIIO and export it to png into a temp dir
 		//you don't need to hear the rant i put here before...
 		//tl;dr Qt had .dds support before, now it doesn't.
 		QString pngpath = pngify(entry.texturepath);
 		if(pngpath == "")  qInfo() << "Texture file" << entry.texturepath << "defined near" << entry.file+":"+QString::number(entry.line) << "does not exist.";
 		content->addItem(new QListWidgetItem(QIcon(QPixmap(pngpath)), entry.key));
-	}
+		++i;
+	}// Conclusion: java-style iterators are slower but nicer.
 }
 
 void saveAGfxEntry(const gfxEntry &newEntry, const gfxEntry &oldEntry){	//this approach is a bit more surgical than the loc code
