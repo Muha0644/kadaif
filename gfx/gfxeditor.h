@@ -19,7 +19,7 @@ class gfxeditor : public QDialog{
 	void on_Save_released();
 
 	signals:
-	void saved(QString path);
+	void saved();
 
 
 	private:

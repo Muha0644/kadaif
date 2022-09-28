@@ -51,6 +51,6 @@ void gfxeditor::on_Save_released(){
 	newEntry.texturepath = ui->texturefileEdit->text();
 	newEntry.key = ui->nameEdit->text();
 	saveAGfxEntry(newEntry, entry);
-	emit saved("interface/" + entry.file);
+	emit saved();
 	close();
 }

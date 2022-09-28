@@ -28,6 +28,7 @@ void loadGfxFile(QHash<QString, gfxEntry>* gfxAll, QString &filepath);
 QHash<QString, gfxEntry>* loadGfx();
 void loadGfxEntries(QListWidget *content, QString &path);
 void saveAGfxEntry(const gfxEntry &newEntry, const gfxEntry &oldEntry);
+void deleteAGfxEntry(const gfxEntry &entry);
 
 QString pngify(const QString& path);	//takes a path to a texture and returns the path of a temp png version (with refresh in mind), "" if path does not exist
 
@@ -44,11 +45,12 @@ class gfxWidget: public QWidget{
 	void empty();
 
 	private:
+	QString curPath;
 	dataClass& liveDB = dataClass::getReference();
 	QListWidget *gfxList;
 
 	public slots:
-	void refreshList(QString path);
+	void refreshList();
 };
 
 class PngView: public QGraphicsView{

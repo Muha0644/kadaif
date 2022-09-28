@@ -124,7 +124,8 @@ gfxWidget::gfxWidget(QString &path, QObject* parent){
 	buttonBar->addWidget(editButt);
 	buttonBar->addSpacerItem(spase);
 
-	refreshList(path);
+	curPath = path;
+	refreshList();
 	vLayout->addLayout(buttonBar);
 	vLayout->addWidget(gfxList);
 }
@@ -132,9 +133,9 @@ gfxWidget::~gfxWidget(){
 	delete gfxList;
 }
 
-void gfxWidget::refreshList(QString path){
+void gfxWidget::refreshList(){
 	gfxList->clear();
-	loadGfxEntries(gfxList, path);
+	loadGfxEntries(gfxList, curPath);
 }
 
 void gfxWidget::edit(){
@@ -147,8 +148,8 @@ void gfxWidget::edit(){
 }
 void gfxWidget::deletethis(){
 	if(gfxList->currentRow() == -1) return;//-1 means nothing is selected
-
-
+	deleteAGfxEntry(liveDB.gfxAll->value(gfxList->currentItem()->text()));
+	refreshList(); //usually editor calls this
 }
 void gfxWidget::newthis(){
 	gfxList->insertItem(gfxList->currentRow()+1, " ");
@@ -175,20 +176,6 @@ void gfxWidget::empty(){
 	msgBox.setInformativeText(empty);
 	msgBox.exec();
 }
-/*//not done
-QList<gfxEntry>* parseGfxEntries(QString &path){
-	QHash<QString, gfxEntry>* gfxEntries = new QHash<QString, gfxEntry>;
-	loadGfxFile(gfxEntries, path);
-
-	QList<gfxEntry> *fileGfxList = new QList<gfxEntry>;	//a gfx list from one file
-
-	QHashIterator<QString, gfxEntry> iter(*gfxEntries);
-	while(iter.hasNext()){
-		gfxEntry gfe = iter.next().value();
-		qDebug() << gfe.key << gfe.file << gfe.line << gfe.texturepath << "\n\n";
-	}
-	return fileGfxList;
-}*/
 
 void loadGfxEntries(QListWidget *content, QString &path){
 	QHash<QString, gfxEntry>* gfxEntries = new QHash<QString, gfxEntry>;
@@ -240,6 +227,27 @@ void saveAGfxEntry(const gfxEntry &newEntry, const gfxEntry &oldEntry){	//this a
 	liveDB.gfxAll->insert(newEntry.key, newEntry);
 }
 
+void deleteAGfxEntry(const gfxEntry& entry){
+	QFile file("interface/" + entry.file);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+		qCritical() << "Failed to open gfx file" << entry.file << "for reading & writing.";
+		return;
+	}
+	QString line, buffer;
+	QTextStream stream(&file);
+
+	for(int i = 1; i < entry.line; i++){
+		buffer.append(stream.readLine()+NEWLINE);
+	}// should be before the line with "spriteType = {"
+	while(!line.contains("}")) stream.readLineInto(&line);//not writing the entry to be deleted into the buffer
+	while(!stream.atEnd()) buffer.append(stream.readLine()+NEWLINE);
+
+	file.close();			//opening with r+w is buggy for some reason, so i have to open the file two times
+	file.open(QIODevice::WriteOnly | QIODevice::Text); file.write(buffer.toUtf8()); file.close();
+	dataClass &liveDB = dataClass::getReference();
+	liveDB.gfxAll->remove(entry.key);
+}
+
 QString pngify(const QString& path){
 	if(path.endsWith(".png")) return path;
 	QString ddspath = QDir::currentPath() + "/" + path;
@@ -259,7 +267,6 @@ QString pngify(const QString& path){
 	} else return "";
 	return tmppath;
 }
-
 
 PngView::PngView(const QString& pngPath, QWidget *parent): QGraphicsView(parent){
 	setDragMode(QGraphicsView::ScrollHandDrag);
