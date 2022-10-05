@@ -25,7 +25,7 @@ void loadGfxFile(QHash<QString, gfxEntry>* gfxAll, QString &filepath){	//loads o
 
 	gfxEntry* entry = nullptr;
 	bool isSpriteType = false;
-	while(!in.atEnd()){
+	while(!in.atEnd()){		//reflective comment: damn i used to suck at programming...
 		line = in.readLine().trimmed(); liNo++;
 		while(line.startsWith("#") || line.trimmed() == ""){ //skip comments
 			line = in.readLine().trimmed(); liNo++;
@@ -56,10 +56,15 @@ void loadGfxFile(QHash<QString, gfxEntry>* gfxAll, QString &filepath){	//loads o
 				gfxAll->insert(entry->key, *entry);
 				delete entry;							//wait what?? Apparently it works...
 				continue;
-			} else {	//what else could be here? lazyloading?
-				//!!TODO lazyloading stuff goes here
-				//! noOfFrames
-				//! transparencecheck
+			} else {
+				QList<QString> valid = {"legacy_lazy_load", "allwaystransparent", "transparencecheck", "effectFile", "noOfFrames"};
+				if(valid.contains(line.first(line.indexOf("=")).trimmed(), Qt::CaseInsensitive)) continue;
+				if(line.startsWith("animation = {")){
+					while(!line.startsWith("}")){
+						line = in.readLine().trimmed(); liNo++;
+					}
+					continue;
+				}
 				qInfo() << "Parsing error in file " + filepath + ": unexpected line in SpriteType decleration on line " + QString::number(liNo);
 			}
 		} else {//expecting sprite decleration or clsoing brackets
