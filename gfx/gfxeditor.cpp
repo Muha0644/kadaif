@@ -58,3 +58,14 @@ void gfxeditor::on_Save_released(){
 	emit saved();
 	close();
 }
+
+void gfxeditor::on_FileDialogue_released(){
+	QSettings settings;
+	QString absPath = QDir::currentPath();
+	QString fileName = QFileDialog::getOpenFileName(this,"Select Texture for " + ui->nameEdit->text(),
+						absPath, "Image Files (*.png *.jpg *.bmp *.dds *.tga)");
+	if(fileName.isEmpty()) return;
+	ui->texturefileEdit->setText(fileName.remove(absPath+"/"));
+	this->on_texturefileEdit_textEdited(fileName);
+}
+

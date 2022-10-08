@@ -17,6 +17,7 @@ class gfxeditor : public QDialog{
 	void on_nameEdit_textEdited(const QString &arg1);
 	void on_texturefileEdit_textEdited(const QString &arg1);
 	void on_Save_released();
+	void on_FileDialogue_released();
 
 	signals:
 	void saved();
