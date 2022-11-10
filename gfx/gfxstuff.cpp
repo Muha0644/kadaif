@@ -189,7 +189,7 @@ void gfxWidget::empty(){
 	msgBox.exec();
 }
 
-void loadGfxEntries(QListWidget *content, QString &path){
+void loadGfxEntries(QListWidget *content, QString &path){	//loads entires from file into a list with icons. Should be a method of gfxWidget but whatever...
 	QHash<QString, gfxEntry>* gfxEntries = new QHash<QString, gfxEntry>;
 	loadGfxFile(gfxEntries, path);
 
@@ -280,8 +280,8 @@ void deleteAGfxEntry(const gfxEntry& entry){
 
 QString pngify(const QString& path){
 	if(path.endsWith(".png")) return path;
-	QString ddspath = QDir::currentPath() + "/" + path;
-	QString tmppath = QDir::tempPath() + "/" + path + ".png";
+	QString ddspath = "./" + path;
+	QString tmppath = "./"  + path + ".png";
 
 	if(QFile::exists(tmppath)){
 		if(QFileInfo(ddspath).lastModified() < QFileInfo(tmppath).lastModified()){
@@ -293,7 +293,7 @@ QString pngify(const QString& path){
 		dir.mkpath(file.dir().path());
 	}
 	if(!path.isEmpty() && QFileInfo(ddspath).isFile()){
-		QProcess::execute("iconvert", {ddspath, tmppath});
+		QProcess::execute("magick", {ddspath, tmppath});
 	} else return "";
 	return tmppath;
 }

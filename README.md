@@ -17,16 +17,16 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
  Anyway here is how to compile from source if you want to:<br>
  ## Install Qt & Dependencies
   ### <em>Windows</em>
-  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. You will also need to install OpenImageIO, so that the command `iconvert` works when run from cmd. (basically make sure `iconvert.exe` exists in your system32 directory or other place that windows knows about)
+  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. You will also need to install Image [Magick](https://imagemagick.org/), so that the command `magick` works when run from cmd. (basically make sure `magick.exe` exists in your system32 directory or other place that windows knows about)
   ### <em>Linux</em>
- Arch: `sudo pacman -Syu qt6-base qt6-doc qt6-tools qt6-translations openimageio`<br>
+ Arch: `sudo pacman -Syu qt6-base qt6-doc qt6-tools qt6-translations imagemagick`<br>
  Debian: [idk, you can make a PR to add the command]<br>
  RedHat: [same]<br>
 
   ### <em>Compile Qt from source</em>
  You can also compile Qt from [source](https://www.qt.io/offline-installers). This will, of course, be a lot more difficult and take a long time to compile, but it's worth it if you don't want to make an account you will never need. To compile Qt6 from source, follow this guide for [linux](https://doc.qt.io/qt-6/linux-building.html) or this one for [windows](https://doc.qt.io/qt-6/windows-building.html). 
  ## Install Kadaif
-  First make sure you have `openimageio` installed, then 
+  First make sure you have `imagemagick` installed, then 
   download and install kadaif:
 * `git clone https://github.com/Muha0644/kadaif`
 * `cd kadaif`
