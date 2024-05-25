@@ -17,7 +17,7 @@ Kadaif aims to automate most boring things like making events, focuses, and gfx 
  Anyway here is how to compile from source if you want to:<br>
  ## Install Qt & Dependencies
   ### <em>Windows</em>
-  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. You will also need to install Image [Magick](https://imagemagick.org/), so that the command `magick` works when run from cmd. (basically make sure `magick.exe` exists in your system32 directory or other place that windows knows about)
+  You can check out the official [install guide](https://doc.qt.io/qt-6/get-and-install-qt.html) for Qt6 which requires making an account. You will also need to install [Image Magick](https://imagemagick.org/), so that the command `magick` works when run from cmd. (basically make sure `magick.exe` exists in your system32 directory or other place that windows knows about)
   ### <em>Linux</em>
  Arch: `sudo pacman -Syu qt6-base qt6-doc qt6-tools qt6-translations imagemagick`<br>
  Debian: [idk, you can make a PR to add the command]<br>
@@ -40,9 +40,11 @@ Of course if you use Arch Linux there is an AUR package: `kadaif-git` or `kadaif
 <br><br>
 
 # Sponsored section
-This section is an advertisement for a mod i'm working on. Check out **Waves of the Danube (WotD)** - A TNO submod that aims to add content for Hungary, Croatia, Romania, and eventually the rest of the Balkans.
+~~This section is an advertisement for a mod i'm working on. Check out **Waves of the Danube (WotD)** - A TNO submod that aims to add content for Hungary, Croatia, Romania, and eventually the rest of the Balkans.~~
 
-Naturally, if you want Waves of the Danube to come out sooner. A larger team would be needed. If you have good GFX skills, writing skills or god bless us, have coding knowledge in HOI4 (or C++). Please join [our discord](https://discord.gg/kXsaS6jzsH)!<br><br>
+~~Naturally, if you want Waves of the Danube to come out sooner. A larger team would be needed. If you have good GFX skills, writing skills or god bless us, have coding knowledge in HOI4 (or C++). Please join [our discord](https://discord.gg/kXsaS6jzsH)!~~
+
+Yeah, this submod is deader than Kissinger... The entire team kind of just gave up unfortunately...<br><br>
 
 # License
 This code is licensed under GPL 3.0, that means you can do whatever you want with it, modify it, distibute it, you can even use it for commercial purposes. The only thing you can't do is sublicense it, I.E. use a license other than GPL 3.0.
